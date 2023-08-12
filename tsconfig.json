@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "CommonJS",
+    "sourceMap": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "index.ts",
+    "helpers/**/*",
+    "node_modules/@types/**/*",
+    "@types/**/*", "helpers/public-api-sample",
+  ],
+  "exclude": [
+    "tsconfig.json"
+  ]
+}
