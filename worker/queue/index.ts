@@ -11,6 +11,7 @@ import runWorker from './run-worker';
 // for debugging
 export const runAllWorkers = async () => {
   for (const worker of workers) {
+    console.log(worker.name);
     const status = await runWorker(worker);
     console.log(status);
     await timers.setImmediate(0);
