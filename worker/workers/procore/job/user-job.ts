@@ -1,49 +1,66 @@
 import { KPAUserAPI } from "../../../shared/api";
 import { IJob } from "../../../shared/job-interface";
-import { KPAUserModel } from "../../../shared/model";
+import { KPAProcoreConfigurationModel, KPAUserModel } from "../../../shared/model";
+import { KPAProcoreConfigurationDB } from "../../../shared/mongodb";
 import { ProcoreAPI } from "../api";
 import { ProcoreAuthModel } from "../model";
 
 export class UserJob implements IJob {
     name: string;
-    companyName: string;
-    kpaToken: string;
+    config: KPAProcoreConfigurationModel;
 
-    constructor(companyName: string, kpaToken: string) {
+    constructor(config: KPAProcoreConfigurationModel) {
         this.name = "Procore User Job";
-        this.companyName = companyName;
-        this.kpaToken = kpaToken;
+        this.config = config;
     }
 
     async execute(): Promise<void> {
         try {
             //Get All KPA Users
-            let kpaUserAPI = new KPAUserAPI(this.kpaToken);
+            let kpaUserAPI = new KPAUserAPI(this.config.kpaToken);
 
             //Fetch Procore Company
-            let auth = new ProcoreAuthModel('','');
+            let auth = new ProcoreAuthModel(this.config.procoreToken, this.config.procoreRefreshToken);
             let procoreAPI = new ProcoreAPI(auth, async (newAuth) => {
-                console.log('Resave AT: '+newAuth.accessToken)
-                console.log('Resave RT: '+newAuth.refreshToken)
+                this.config.procoreToken = newAuth.accessToken;
+                this.config.procoreRefreshToken = newAuth.refreshToken;
+
+                let db = new KPAProcoreConfigurationDB();
+                db.updateConfiguration(this.config);
             })
             let companies = await procoreAPI.getCompanies();
             for(let company of companies) {
-                if (this.companyName === '' || this.companyName === company.name) {
+                if (this.config.procoreCompanyName === '' || this.config.procoreCompanyName === company.name) {
                     let users = await procoreAPI.getUsers(company.id);
 
+                    let kpaUsers : KPAUserModel[] = [];
                     for(let user of users) {
                         //Build KPA user Data and Check existing
                         let kpaUser = new KPAUserModel();
-                        
-                        //Set kpaUserData
 
-                        //Save / Update User
-                        kpaUserAPI.saveUser(kpaUser)
+                        if (user.employee_id == null || user.employee_id == '') {
+                            continue;
+                        }
+
+                        kpaUser.employeeNumber = user.employee_id;
+                        kpaUser.firstName = user.first_name
+                        kpaUser.lastName = user.last_name;
+                        kpaUser.username = user.employee_id;
+                        kpaUser.email = user.email_address;
+                        kpaUser.initialPassword = user.employee_id;
+                        kpaUser.role = 'Employee';
+                        kpaUser.title = user.job_title;
+
+                        kpaUsers.push(kpaUser);
                     }
+                    
+                    //Send Data
+                    await kpaUserAPI.saveUser(this.config.kpaSite, this.config.emailReport, kpaUsers)
                 }
             }
         } catch(e) {
             console.log('Worker Stop with Error : '+e.message)
+            //Send an email to failed;
         }
     }
     

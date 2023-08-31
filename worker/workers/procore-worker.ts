@@ -1,6 +1,8 @@
+import { MongoClient } from "mongodb";
 import { IWorker } from "../shared/worker-interface";
 import WorkerStatus from "../shared/worker-status";
 import { ProjectJob, UserJob } from "./procore/job";
+import { KPAProcoreConfigurationDB } from "../shared/mongodb";
 
 
 export class ProcoreWorker implements IWorker {
@@ -13,16 +15,32 @@ export class ProcoreWorker implements IWorker {
             status.log('Worker Procore Start...');
 
             //Fetch Configuration
+            const procoreConfigDB = new KPAProcoreConfigurationDB();
+            let configs = await procoreConfigDB.getConfiguration();
+            for(var config of configs) {
+                status.log(`Execute Procore Customer: ${config.customerId} : ${config.procoreCompanyName}`);
 
-            //Run User Job
-            let companyName = '';
-            let kpaToken = '';
-            let userJob = new UserJob(companyName, kpaToken);
-            await userJob.execute();
+                if (config.kpaToken == '' || config.procoreToken == '' || config.procoreRefreshToken == '') {
+                    status.log(`Skip Procore Customer: ${config.customerId} : ${config.procoreCompanyName}`);
+                    continue;
+                }
 
-            //Run Project Job
-            let projectJob = new ProjectJob(companyName, kpaToken);
-            await projectJob.execute();
+                if (config.isSyncUser) {
+                    status.log(`Start Sync User`);
+                    let userJob = new UserJob(config);
+                    await userJob.execute();
+                    status.log(`Done Sync User`);
+                }
+
+                if (config.isSyncProject) {
+                    status.log(`Start Sync Project`);
+                    let projectJob = new ProjectJob(config);
+                    await projectJob.execute();
+                    status.log(`Done Sync Project`);
+                }
+
+                status.log(`Done Procore Customer: ${config.customerId} : ${config.procoreCompanyName}`);
+            }
 
             status.log('Worker Procore Done...');
         };
