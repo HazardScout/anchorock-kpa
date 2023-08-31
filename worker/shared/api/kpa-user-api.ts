@@ -34,8 +34,6 @@ export class KPAUserAPI {
             dataUser = `${dataUser},${Helper.csvContentChecker(model.role)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.title)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.email)}`
-            dataUser = `${dataUser},${Helper.csvContentChecker(model.cellPhone)}`
-            dataUser = `${dataUser},${Helper.csvContentChecker(model.hireDate)}`
 
             content = `${content}\n\r${dataUser}`
         }
