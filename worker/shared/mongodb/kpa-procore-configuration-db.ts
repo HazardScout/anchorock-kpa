@@ -6,7 +6,10 @@ export class KPAProcoreConfigurationDB {
     collectionName = 'procoreconfigs';
 
     constructor() {
-        this.mongoDbUrl = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/?authMechanism=DEFAULT`;
+        this.mongoDbUrl = (
+            process.env.MONGO_URI
+            || `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/?authMechanism=DEFAULT`
+        );
     }
 
     async getConfiguration() : Promise<KPAProcoreConfigurationModel[]> {
@@ -27,11 +30,11 @@ export class KPAProcoreConfigurationDB {
             configuration.isSyncProject = data['is_sync_project'];
             configuration.isSyncUser = data['is_sync_user'];
             configuration.emailReport = data['email_report'];
-            
+
             result.push(configuration);
         };
-        mongoClient.close();
-        
+        await mongoClient.close();
+
         return result;
     }
 
@@ -39,8 +42,8 @@ export class KPAProcoreConfigurationDB {
         const mongoClient = await MongoClient.connect(this.mongoDbUrl);
         const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`)
         let mongoDbCollection = mongoDb.collection(this.collectionName);
-        
-        mongoDbCollection.updateOne({customer_id: data.customerId}, {$set: {
+
+        await mongoDbCollection.updateOne({customer_id: data.customerId}, {$set: {
             kpa_token: data.kpaToken,
             kpa_site: data.kpaSite,
             procore_company_name: data.procoreCompanyName,
@@ -50,7 +53,7 @@ export class KPAProcoreConfigurationDB {
             is_sync_user: data.isSyncUser
         }});
 
-        mongoClient.close();
+        await mongoClient.close();
         return data;
     }
 }

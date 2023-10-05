@@ -1,4 +1,3 @@
-import { MongoClient } from "mongodb";
 import { IWorker } from "../shared/worker-interface";
 import WorkerStatus from "../shared/worker-status";
 import { ProjectJob, UserJob } from "./procore/job";
@@ -7,10 +6,18 @@ import { KPAProcoreConfigurationDB } from "../shared/mongodb";
 
 export class ProcoreWorker implements IWorker {
     name: string;
+    cron?: string;
+    maxtime_milli?: number;
     execute: (status: WorkerStatus) => Promise<void>;
 
     constructor() {
         this.name = 'Procore Worker';
+
+        // every hour
+        this.cron = '0 * * * *';
+        // 30 minutes
+        this.maxtime_milli = .5 * (1000 * 60 * 60);
+
         this.execute = async (status:WorkerStatus) => {
             status.log('Worker Procore Start...');
 

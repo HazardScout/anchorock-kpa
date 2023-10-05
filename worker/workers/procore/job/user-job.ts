@@ -26,7 +26,7 @@ export class UserJob implements IJob {
                 this.config.procoreRefreshToken = newAuth.refreshToken;
 
                 let db = new KPAProcoreConfigurationDB();
-                db.updateConfiguration(this.config);
+                await db.updateConfiguration(this.config);
             })
             let companies = await procoreAPI.getCompanies();
             for(let company of companies) {
@@ -53,7 +53,7 @@ export class UserJob implements IJob {
 
                         kpaUsers.push(kpaUser);
                     }
-                    
+
                     //Send Data
                     await kpaUserAPI.saveUser(this.config.kpaSite, this.config.emailReport, kpaUsers)
                 }
@@ -63,5 +63,5 @@ export class UserJob implements IJob {
             //Send an email to failed;
         }
     }
-    
+
 }

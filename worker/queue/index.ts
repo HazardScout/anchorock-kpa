@@ -17,3 +17,5 @@ export const runAllWorkers = async () => {
     await timers.setImmediate(0);
   }
 };
+
+export { runCronWorkers } from './start-cron-workers';

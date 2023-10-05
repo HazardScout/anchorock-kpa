@@ -1,6 +1,6 @@
 import axios, { Axios } from "axios";
-import { KPAProjectModel } from "../model/kpa-project-model";
-import { Helper } from "../../utilities";
+import { KPAProjectModel } from "worker/shared/model/kpa-project-model";
+import { Helper } from 'worker/utilities'
 
 export class KPAProjectAPI {
     token: string;

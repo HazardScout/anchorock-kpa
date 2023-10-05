@@ -26,7 +26,7 @@ export class ProjectJob implements IJob  {
                 this.config.procoreRefreshToken = newAuth.refreshToken;
 
                 let db = new KPAProcoreConfigurationDB();
-                db.updateConfiguration(this.config);
+                await db.updateConfiguration(this.config);
             })
             let companies = await procoreAPI.getCompanies();
             for(let company of companies) {
@@ -39,7 +39,7 @@ export class ProjectJob implements IJob  {
                         let kpaProject = new KPAProjectModel();
                         kpaProject.name = project.name;
                         kpaProject.code = project.project_number;
-                        
+
                         kpaProjects.push(kpaProject);
                     }
 
@@ -54,5 +54,5 @@ export class ProjectJob implements IJob  {
 
         throw new Error("Method not implemented.");
     }
-    
+
 }
