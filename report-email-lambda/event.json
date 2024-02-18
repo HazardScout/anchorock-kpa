@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "timestamp": "2024-01-15T17:43:03.508Z",
+  "requestContext": {
+      "requestId": "7131dfa1-9869-405b-bdeb-490d2023768c",
+      "functionArn": "arn:aws:lambda:us-west-2:348081379049:function:rivet-integration-lambda:$LATEST",
+      "condition": "Success",
+      "approximateInvokeCount": 1
+  },
+  "requestPayload": {
+      "version": "0",
+      "id": "0f62d2fd-e016-2a67-df85-b8f1d6a6a08a",
+      "detail-type": "Scheduled Event",
+      "source": "aws.events",
+      "account": "348081379049",
+      "time": "2024-01-15T17:42:00Z",
+      "region": "us-west-2",
+      "resources": [
+          "arn:aws:events:us-west-2:348081379049:rule/Event42"
+      ],
+      "detail": {}
+  },
+  "responseContext": {
+      "statusCode": 200,
+      "executedVersion": "$LATEST"
+  },
+  "responsePayload": {
+      "statusCode": 200,
+      "source": "Rivet Integration",
+      "body": {
+          "workerName": "Rivet Worker",
+          "jobLog": [
+              {
+                  "jobName": "Rivet User Job",
+                  "totalExistingRecord": 0,
+                  "totalSourceRecord": 0,
+                  "upsertRecord": 1079,
+                  "inactivatedRecord": 0,
+                  "skippedRecord": 9516,
+                  "started": 1705340545897,
+                  "stopped": 1705340578535,
+                  "duration": 32638
+              },
+              {
+                  "jobName": "Rivet Project Job",
+                  "totalExistingRecord": 1,
+                  "totalSourceRecord": 2237,
+                  "upsertRecord": 2144,
+                  "inactivatedRecord": 0,
+                  "skippedRecord": 93,
+                  "started": 1705340578535,
+                  "stopped": 1705340583215,
+                  "duration": 4680
+              }
+          ],
+          "started": 1705340543976,
+          "stopped": 1705340583234,
+          "duration": 39258
+      }
+  }
+}
