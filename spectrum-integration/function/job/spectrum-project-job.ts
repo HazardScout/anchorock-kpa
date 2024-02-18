@@ -32,7 +32,8 @@ export class SpectrumProjectJob implements IJob {
         try {
             //Fetch KPA Projects
             let kpaProjectAPI = new KPAProjectAPI(this.kpaToken);
-            let kpaExistProjects = await kpaProjectAPI.getAllProject();
+            // let kpaExistProjects = await kpaProjectAPI.getAllProject();
+            let kpaExistProjects : KPAProjectModel[] = [];
             status.totalExistingRecord = kpaExistProjects.length
 
             //Fetch Spectrum Projects
@@ -72,6 +73,11 @@ export class SpectrumProjectJob implements IJob {
                 //Build KPA project Data and Check existing
                 kpaProject.name = project.jobDescription;
                 kpaProject.code = project.jobNumber;
+                kpaProject.isActive = project.statusCode === "Active"
+                kpaProject.address = project.address;
+                kpaProject.city = project.city;
+                kpaProject.state = project.state;
+                kpaProject.zip = project.zipCode;
 
                 //Add Projects To List
                 kpaProjects.push(kpaProject);
@@ -79,10 +85,10 @@ export class SpectrumProjectJob implements IJob {
             }
             //Send Data
             console.log(kpaProjects.length)
-            // const success = await kpaProjectAPI.saveProject(this.kpaSite, this.emailReport, kpaProjects)
-            // if (!success) {
-            //     console.log('Failed to save Project')
-            // }
+            const success = await kpaProjectAPI.saveProject(this.kpaSite, this.emailReport, kpaProjects)
+            if (!success) {
+                console.log('Failed to save Project')
+            }
         } catch(e) {
             console.log(`Worker Stop with Error : ${e}`)
         }

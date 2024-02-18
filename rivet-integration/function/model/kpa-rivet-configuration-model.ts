@@ -1,5 +1,5 @@
 import { Document } from "mongodb";
-import { KPABaseConfigurationModel } from "../base-integration/model";
+import { KPABaseConfigurationModel } from "../../../base-integration/src/model";
 
 export class KPARivetConfigurationModel extends KPABaseConfigurationModel {
     clientId: string;

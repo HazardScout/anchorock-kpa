@@ -1,8 +1,8 @@
 import { RivetAPI } from "../api";
-import { KPAUserAPI } from "../base-integration/api";
-import { JobStatus } from "../base-integration/job";
-import { IJob } from "../base-integration/job/job-interface";
-import { KPAUserModel } from "../base-integration/model";
+import { KPAUserAPI } from "../../../base-integration/src/api";
+import { JobStatus } from "../../../base-integration/src/job";
+import { IJob } from "../../../base-integration/src/job/job-interface";
+import { KPAUserModel } from "../../../base-integration/src/model";
 import { KPARivetConfigurationModel } from "../model";
 
 export class RivetUserJob implements IJob {
@@ -63,9 +63,11 @@ export class RivetUserJob implements IJob {
                 kpaUser.lastName = user.lastName;
                 kpaUser.username = user.employeeId;
                 kpaUser.email = user.email;
-                kpaUser.initialPassword = `${user.employeeId}.kpaehs!!`;
-                kpaUser.role = 'Employee';
+                kpaUser.initialPassword = `${user.employeeId}.kpaflex!!`;
+                kpaUser.role = this.config.defaultRole;
                 kpaUser.terminationDate = user.terminationDate;
+                kpaUser.welcomeEmail = this.config.isWelcomeEmail
+                kpaUser.resetPassword = this.config.isForceResetPassword
 
                 kpaUsers.push(kpaUser);
                 status.upsertRecord++;

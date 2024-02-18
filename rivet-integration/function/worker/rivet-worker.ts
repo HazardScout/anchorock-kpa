@@ -1,9 +1,9 @@
 import { stat } from "fs";
-import { IWorker } from "../base-integration/worker/worker-interface";
-import WorkerStatus from "../base-integration/worker/worker-status";
+import { IWorker } from "../../../base-integration/src/worker/worker-interface";
+import WorkerStatus from "../../../base-integration/src/worker/worker-status";
 import { KPARivetConfigurationDB } from "../mongodb";
 import { RivetProjectJob, RivetUserJob } from "../job";
-import { JobStatus } from "../base-integration/job";
+import { JobStatus } from "../../../base-integration/src/job";
 
 export class RivetWorker implements IWorker {
     name: string;
@@ -39,22 +39,22 @@ export class RivetWorker implements IWorker {
                     console.log(`Done Sync User`);
                 }
 
-                // if (config.isSyncProject) {
-                //     console.log(`Start Sync Project`);
-                //     let projectJob = new RivetProjectJob(config);
-                //     let jobStatus = new JobStatus(projectJob.name);
-                //     status.jobLog.push(jobStatus);
+                if (config.isSyncProject) {
+                    console.log(`Start Sync Project`);
+                    let projectJob = new RivetProjectJob(config);
+                    let jobStatus = new JobStatus(projectJob.name);
+                    status.jobLog.push(jobStatus);
 
-                //     try {
-                //         jobStatus.start()
-                //         await projectJob.execute(jobStatus);
-                //     } catch (e) {
-                //         jobStatus.error = String(e)
-                //     } finally {
-                //         jobStatus.done()
-                //     }
-                //     console.log(`Done Sync Project`);
-                // }
+                    try {
+                        jobStatus.start()
+                        await projectJob.execute(jobStatus);
+                    } catch (e) {
+                        jobStatus.error = String(e)
+                    } finally {
+                        jobStatus.done()
+                    }
+                    console.log(`Done Sync Project`);
+                }
 
                 console.log(`Execute Rivet Customer: ${config.kpaSite} Done`);
             }

@@ -1,5 +1,5 @@
 import { Document } from "mongodb";
-import { KPABaseConfigurationDB } from "../base-integration/mongodb";
+import { KPABaseConfigurationDB } from "../../../base-integration/src/mongodb";
 import { KPARivetConfigurationModel } from "../model/kpa-rivet-configuration-model";
 
 

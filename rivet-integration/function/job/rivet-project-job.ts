@@ -1,9 +1,9 @@
-import { KPAProjectAPI } from "../base-integration/api";
+import { KPAProjectAPI } from "../../../base-integration/src/api";
 import { RivetAPI } from "../api";
 import { KPARivetConfigurationModel } from "../model";
-import { KPAProjectModel } from "../base-integration/model";
-import { IJob } from "../base-integration/job/job-interface";
-import { JobStatus } from "../base-integration/job";
+import { KPAProjectModel } from "../../../base-integration/src/model";
+import { IJob } from "../../../base-integration/src/job/job-interface";
+import { JobStatus } from "../../../base-integration/src/job";
 
 export class RivetProjectJob implements IJob {
     name: string;
@@ -19,7 +19,8 @@ export class RivetProjectJob implements IJob {
         try {
 
             let kpaProjectAPI = new KPAProjectAPI(this.config.kpaToken);
-            let kpaExistProjects = await kpaProjectAPI.getAllProject();
+            // let kpaExistProjects = await kpaProjectAPI.getAllProject();
+            let kpaExistProjects : KPAProjectModel[] = [];
             status.totalExistingRecord = kpaExistProjects.length
             console.log(kpaExistProjects)
 
@@ -62,6 +63,11 @@ export class RivetProjectJob implements IJob {
                 //Build KPA project Data and Check existing
                 kpaProject.name = project.jobName;
                 kpaProject.code = project.jobNumber;
+                kpaProject.isActive = project.jobStatus === 'In Progress'
+                kpaProject.address = project.address;
+                kpaProject.city = project.city;
+                kpaProject.state = project.state;
+                kpaProject.zip = project.zip;
                 
                 kpaProjects.push(kpaProject);
                 status.upsertRecord++
@@ -69,10 +75,10 @@ export class RivetProjectJob implements IJob {
 
             //Send Data
             console.log(kpaProjects.length)
-            // const success = await kpaProjectAPI.saveProject(this.config.kpaSite, this.config.emailReport, kpaProjects)
-            // if (!success) {
-            //     console.log('Failed to save Project')
-            // }
+            const success = await kpaProjectAPI.saveProject(this.config.kpaSite, this.config.emailReport, kpaProjects)
+            if (!success) {
+                console.log('Failed to save Project')
+            }
         } catch(e) {
             console.log(`Worker Stop with Error : ${e}`)
             //Send an email to failed;

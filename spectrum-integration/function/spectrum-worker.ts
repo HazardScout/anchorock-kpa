@@ -49,6 +49,18 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                     'emailReport': {
                         StringValue: JSON.stringify(config.emailReport, null, 2),
                         DataType: 'String'
+                    },
+                    'defaultRole': {
+                        StringValue: config.defaultRole,
+                        DataType: 'String'
+                    },
+                    'welcomeEmail': {
+                        StringValue: config.isWelcomeEmail ? '1' : '0',
+                        DataType: 'String'
+                    },
+                    'resetPassword': {
+                        StringValue: config.isForceResetPassword ? '1' : '0',
+                        DataType: 'String'
                     }
                 },
             }

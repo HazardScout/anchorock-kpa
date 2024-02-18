@@ -1,5 +1,5 @@
 import { Context, Handler } from "aws-lambda";
-import { WorkerStatus } from "./base-integration/worker";
+import { WorkerStatus } from "./../../base-integration/src/worker";
 import { RivetWorker } from "./worker/rivet-worker";
 
 // Handler

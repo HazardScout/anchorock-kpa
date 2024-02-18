@@ -12,6 +12,9 @@ export class SpectrumUserJob implements IJob {
     isEditUser: boolean;
     emailReport: string[];
     config: Map<String,Map<String, String>>;
+    defaultRole: string;
+    welcomeEmail: boolean;
+    resetPassword: boolean;
 
     constructor(config: Map<String,Map<String, String>>) {
         this.name = 'Spectrum User Job';
@@ -21,7 +24,10 @@ export class SpectrumUserJob implements IJob {
         this.kpaToken = `${config.get('kpaToken')?.get('stringValue')}`;
         this.clientId = `${config.get('clientId')?.get('stringValue')}`;
         this.clientSecret = `${config.get('clientSecret')?.get('stringValue')}`;
-        this.isEditUser = `${config.get('isEditUser')?.get('stringValue')}` == '1';
+        this.isEditUser = `${config.get('isEditUser')?.get('stringValue')}` === '1';
+        this.defaultRole = `${config.get('defaultRole')?.get('stringValue')}`;
+        this.welcomeEmail = `${config.get('welcomeEmail')?.get('stringValue')}` === '1';
+        this.resetPassword = `${config.get('resetPassword')?.get('stringValue')}` === '1';
 
         const emailReportString = `${config.get('emailReport')?.get('stringValue')}`;
         this.emailReport = JSON.parse(emailReportString);
@@ -80,9 +86,11 @@ export class SpectrumUserJob implements IJob {
                 kpaUser.lastName = user.lastName;
                 kpaUser.username = user.employeeCode;
                 kpaUser.email = '';
-                kpaUser.initialPassword = `${user.employeeCode}.kpaehs!!`;
-                kpaUser.role = 'Employee';
+                kpaUser.initialPassword = `${user.employeeCode}.kpaflex!!`;
+                kpaUser.role = this.defaultRole;
                 kpaUser.title = user.title
+                kpaUser.welcomeEmail = this.welcomeEmail
+                kpaUser.resetPassword = this.resetPassword
 
                 if (user.employeeStatus !== 'A') {
                     kpaUser.terminationDate = new Date().toDateString();
