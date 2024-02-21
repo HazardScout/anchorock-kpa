@@ -1,0 +1,58 @@
+{
+    "Records": [
+        {
+            "messageId": "4c35e245-c9d8-4391-afee-529e5793648f",
+            "receiptHandle": "AQEBVgOgDG2LKBvV8qUfyeT2rEE8QiNwqghM0o+TZYSB3bueK7jxVelWiBbTaGVXCtYRB0td8Jix9P81eXxFeuoCczOvFvmfmtCaH15igcIYxHFCy6WkGI2Emi12VWHK0iAtwLSANI1LDsxEpjlAtQomK6sA59BoZlB8S5cDzM0Vn7iEsWLNy7UUVus5vNXGdbzNOi2stYWLbW98nyzNebbU69SMs5spWm5abs0r50r7PTcybfWocGQ6aq6cuSdWxHnewh8y1d9JT5LlNQspW4njOLIgXFH9L5Vztu6O5bJn+J0X7EWFEtwFljTV1JicbQOjNlVDFHHqhkFNnLxKlJ2mfCoGw9vXpv2mqeZLUctAS+gYP2rj9NDjonutIOz2hLBv76E9Xar2KQprheCarPl5Dw==",
+            "body": "Project Integration - yogi",
+            "attributes": {
+                "ApproximateReceiveCount": "1",
+                "SentTimestamp": "1706091468429",
+                "SenderId": "AIDAIWOJAYKTVLC76ITKO",
+                "ApproximateFirstReceiveTimestamp": "1706091468440"
+            },
+            "messageAttributes": {
+                "clientId": {
+                    "stringValue": "id_tmp",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "kpaSite": {
+                    "stringValue": "yogi",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "isEditProject": {
+                    "stringValue": "0",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "token": {
+                    "stringValue": "secret_tmp",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "emailReport": {
+                    "stringValue": "[\n  \"yogi@anchorock.com\"\n]",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "kpaToken": {
+                    "stringValue": "kpaehs_live_sUzekkgxqmGMq3VgiXwhr1fij8AsU3JM",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                }
+            },
+            "md5OfMessageAttributes": "3ecb0a6d636392775c83674e462d0c6f",
+            "md5OfBody": "bb30c36242a72d653a56be65afc9389f",
+            "eventSource": "aws:sqs",
+            "eventSourceARN": "arn:aws:sqs:us-west-2:348081379049:KPARivetProject",
+            "awsRegion": "us-west-2"
+        }
+    ]
+}

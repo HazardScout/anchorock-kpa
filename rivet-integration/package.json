@@ -30,10 +30,20 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "test": "jest",
-    "prebuild": "rm -rf dist",
     "build": "esbuild function/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
-    "postbuild": "cd dist && zip -r index.zip index.js*"
+    "postbuild": "cd dist && zip -r index.zip index.js*",
+
+    "test": "jest",
+    "test-user": "jest -t 'running-test lambda user-handler'",
+    "test-project": "jest -t 'running-test lambda project-handler'",
+    "test-worker": "jest -t 'running-test lambda worker-handler'",
+    "prebuild": "rm -rf dist",
+    "build-worker": "esbuild function/rivet-worker.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/rivet-worker.js",
+    "build-user": "esbuild function/rivet-user-worker.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/rivet-user-worker.js",
+    "build-project": "esbuild function/rivet-project-worker.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/rivet-project-worker.js",
+    "postbuild-worker": "cd dist && zip -r worker.zip rivet-worker.js*",
+    "postbuild-user": "cd dist && zip -r user.zip rivet-user-worker.js*",
+    "postbuild-project": "cd dist && zip -r project.zip rivet-project-worker.js*"
     
   }
 }

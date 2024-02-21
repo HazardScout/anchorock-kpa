@@ -11,25 +11,25 @@ export class SpectrumUserJob implements IJob {
     clientSecret: string;
     isEditUser: boolean;
     emailReport: string[];
-    config: Map<String,Map<String, String>>;
+    config: any;
     defaultRole: string;
     welcomeEmail: boolean;
     resetPassword: boolean;
 
-    constructor(config: Map<String,Map<String, String>>) {
+    constructor(config: any) {
         this.name = 'Spectrum User Job';
         this.config = config;
-        
-        this.kpaSite = `${config.get('kpaSite')?.get('stringValue')}`;
-        this.kpaToken = `${config.get('kpaToken')?.get('stringValue')}`;
-        this.clientId = `${config.get('clientId')?.get('stringValue')}`;
-        this.clientSecret = `${config.get('clientSecret')?.get('stringValue')}`;
-        this.isEditUser = `${config.get('isEditUser')?.get('stringValue')}` === '1';
-        this.defaultRole = `${config.get('defaultRole')?.get('stringValue')}`;
-        this.welcomeEmail = `${config.get('welcomeEmail')?.get('stringValue')}` === '1';
-        this.resetPassword = `${config.get('resetPassword')?.get('stringValue')}` === '1';
 
-        const emailReportString = `${config.get('emailReport')?.get('stringValue')}`;
+        this.kpaSite = config["kpaSite"]["stringValue"];
+        this.kpaToken = config["kpaToken"]["stringValue"];
+        this.clientId = config["clientId"]["stringValue"];
+        this.clientSecret = config["clientSecret"]["stringValue"];
+        this.isEditUser = config["isEditUser"]["stringValue"] == '1';
+        this.defaultRole = config["defaultRole"]["stringValue"];
+        this.welcomeEmail = config["welcomeEmail"]["stringValue"] === '1';
+        this.resetPassword = config["resetPassword"]["stringValue"] === '1';
+
+        const emailReportString = config["emailReport"]["stringValue"];
         this.emailReport = JSON.parse(emailReportString);
     }
 

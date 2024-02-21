@@ -37,12 +37,16 @@ export class KPAProjectAPI {
             content = `${content},${Helper.csvContentChecker(model.zip)}`
         }
 
+        // console.log(content)
+
+        // return true;
+
         const fileData = Buffer.from(content, 'binary').toString('base64');
 
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
-            failureEmails: [],
+            failureEmails: emailReport,
             successEmails: []
         });
 

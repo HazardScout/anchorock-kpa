@@ -11,19 +11,19 @@ export class SpectrumProjectJob implements IJob {
     clientSecret: string;
     isEditProject: boolean;
     emailReport: string[];
-    config: Map<String,Map<String, String>>;
+    config: any;
 
-    constructor(config: Map<String,Map<String, String>>) {
+    constructor(config: any) {
         this.name = 'Spectrum Project Job';
         this.config = config;
+        
+        this.kpaSite = config["kpaSite"]["stringValue"];
+        this.kpaToken = config["kpaToken"]["stringValue"];
+        this.clientId = config["clientId"]["stringValue"];
+        this.clientSecret = config["clientSecret"]["stringValue"];
+        this.isEditProject = config["isEditProject"]["stringValue"] == '1';
 
-        this.kpaSite = `${config.get('kpaSite')?.get('stringValue')}`;
-        this.kpaToken = `${config.get('kpaToken')?.get('stringValue')}`;
-        this.clientId = `${config.get('clientId')?.get('stringValue')}`;
-        this.clientSecret = `${config.get('clientSecret')?.get('stringValue')}`;
-        this.isEditProject = `${config.get('isEditProject')?.get('stringValue')}` == '1';
-
-        const emailReportString = `${config.get('emailReport')?.get('stringValue')}`;
+        const emailReportString = config["emailReport"]["stringValue"];
         this.emailReport = JSON.parse(emailReportString);
     }
 

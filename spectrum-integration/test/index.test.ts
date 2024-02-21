@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
-import { lambdaHandler } from "../function"
 import { workerLambdaHandler } from "../function/spectrum-worker";
 import { spectrumUserLambdaHandler } from "../function/spectrum-user-worker";
+import { spectrumProjectLambdaHandler } from "../function/spectrum-project-worker";
 
 
 require('dotenv').config();
@@ -30,7 +30,7 @@ describe('running-test', () => {
     it('project-handler', async () => {
       let eventFile = readFileSync('event-project.json','utf8')
       let event = JSON.parse(eventFile)
-      const result: any = await spectrumUserLambdaHandler(event, context, callback);
+      const result: any = await spectrumProjectLambdaHandler(event, context, callback);
       expect(result.statusCode).toBe(200);
     }, 300000)
 

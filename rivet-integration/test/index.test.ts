@@ -1,19 +1,38 @@
-import { lambdaHandler } from "../function"
+import { readFileSync } from "fs";
+import { rivetWorkerLambdaHandler } from "../function/rivet-worker";
+import { rivetUserLambdaHandler } from "../function/rivet-user-worker";
+import { rivetProjectLambdaHandler } from "../function/rivet-project-worker";
 
 
 require('dotenv').config();
 
-describe('Test A', () => {
+describe('running-test', () => {
 
-  describe('Lamda Handler', () => {
+  describe('lambda', () => {
     const event: any = { headers: {}};
     const context: any = { functionVersion: '$LATEST' };
     const callback: any = {};
 
-    it('Trigger Handler', async () => {
+    it('worker-handler', async () => {
       const event = {}
-      const result: any = await lambdaHandler(event, context, callback);
+      const result: any = await rivetWorkerLambdaHandler(event, context, callback);
       expect(result.statusCode).toBe(200);
     }, 300000)
+
+    it('user-handler', async () => {
+      let eventFile = readFileSync('event-user.json','utf8')
+      let event = JSON.parse(eventFile)
+      const result: any = await rivetUserLambdaHandler(event, context, callback);
+      expect(result.statusCode).toBe(200);
+    }, 300000)
+
+
+    it('project-handler', async () => {
+      let eventFile = readFileSync('event-project.json','utf8')
+      let event = JSON.parse(eventFile)
+      const result: any = await rivetProjectLambdaHandler(event, context, callback);
+      expect(result.statusCode).toBe(200);
+    }, 300000)
+
   })
 })

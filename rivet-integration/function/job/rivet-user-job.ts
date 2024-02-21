@@ -7,23 +7,45 @@ import { KPARivetConfigurationModel } from "../model";
 
 export class RivetUserJob implements IJob {
     name: string;
-    config: KPARivetConfigurationModel;
+    kpaSite: string;
+    kpaToken: string;
+    clientId: string;
+    token: string;
+    isEditUser: boolean;
+    emailReport: string[];
+    config: any;
+    defaultRole: string;
+    welcomeEmail: boolean;
+    resetPassword: boolean;
 
-    constructor(config: KPARivetConfigurationModel) {
+    constructor(config: any) {
         this.name = 'Rivet User Job';
         this.config = config;
+
+        this.kpaSite = config["kpaSite"]["stringValue"];
+        this.kpaToken = config["kpaToken"]["stringValue"];
+        this.clientId = config["clientId"]["stringValue"];
+        this.token = config["token"]["stringValue"];
+        this.isEditUser = config["isEditUser"]["stringValue"] == '1';
+        this.defaultRole = config["defaultRole"]["stringValue"];
+        this.welcomeEmail = config["welcomeEmail"]["stringValue"] === '1';
+        this.resetPassword = config["resetPassword"]["stringValue"] === '1';
+
+        const emailReportString = config["emailReport"]["stringValue"];
+
+        this.emailReport = JSON.parse(emailReportString);
     }
 
     async execute(status:JobStatus): Promise<void> {
         console.log("Execute RivetUserJob Start");
         try {
 
-            let kpaUserAPI = new KPAUserAPI(this.config.kpaToken);
+            let kpaUserAPI = new KPAUserAPI(this.kpaToken);
             let kpaExistUsers = await kpaUserAPI.getAllUser();
             status.totalExistingRecord = kpaExistUsers.length;
             console.log(kpaExistUsers)
 
-            let rivetAPI = new RivetAPI(this.config.clientId, this.config.token);
+            let rivetAPI = new RivetAPI(this.clientId, this.token);
             let users = await rivetAPI.getUsers();
             status.totalSourceRecord = users.length
             
@@ -48,7 +70,7 @@ export class RivetUserJob implements IJob {
                         continue;
                     }
                 } else {
-                    if (!this.config.isEditUser) {
+                    if (!this.isEditUser) {
                         // console.log(`Skip User because of Cannot Allow to edit ${user.employeeId}`)
                         status.skippedRecord++
                         continue;
@@ -64,10 +86,10 @@ export class RivetUserJob implements IJob {
                 kpaUser.username = user.employeeId;
                 kpaUser.email = user.email;
                 kpaUser.initialPassword = `${user.employeeId}.kpaflex!!`;
-                kpaUser.role = this.config.defaultRole;
+                kpaUser.role = this.defaultRole;
                 kpaUser.terminationDate = user.terminationDate;
-                kpaUser.welcomeEmail = this.config.isWelcomeEmail
-                kpaUser.resetPassword = this.config.isForceResetPassword
+                kpaUser.welcomeEmail = this.welcomeEmail
+                kpaUser.resetPassword = this.resetPassword
 
                 kpaUsers.push(kpaUser);
                 status.upsertRecord++;
@@ -76,7 +98,7 @@ export class RivetUserJob implements IJob {
             //Send Data
             // console.log(kpaUsers)
             console.log(kpaUsers.length)
-            const success = await kpaUserAPI.saveUser(this.config.kpaSite, this.config.emailReport, kpaUsers)
+            const success = await kpaUserAPI.saveUser(this.kpaSite, this.emailReport, kpaUsers)
             if (!success) {
                 console.log('Failed to save Users')
             }

@@ -7,24 +7,39 @@ import { JobStatus } from "../../../base-integration/src/job";
 
 export class RivetProjectJob implements IJob {
     name: string;
-    config: KPARivetConfigurationModel;
+    kpaSite: string;
+    kpaToken: string;
+    clientId: string;
+    token: string;
+    isEditProject: boolean;
+    emailReport: string[];
+    config: any;
 
-    constructor(config: KPARivetConfigurationModel) {
+    constructor(config: any) {
         this.name = 'Rivet Project Job';
         this.config = config;
+
+        this.kpaSite = config["kpaSite"]["stringValue"];
+        this.kpaToken = config["kpaToken"]["stringValue"];
+        this.clientId = config["clientId"]["stringValue"];
+        this.token = config["token"]["stringValue"];
+        this.isEditProject = config["isEditProject"]["stringValue"] == '1';
+
+        const emailReportString = config["emailReport"]["stringValue"];
+        this.emailReport = JSON.parse(emailReportString);
     }
 
     async execute(status:JobStatus): Promise<void> {
         console.log("Execute RivetProjectJob Start");
         try {
 
-            let kpaProjectAPI = new KPAProjectAPI(this.config.kpaToken);
+            let kpaProjectAPI = new KPAProjectAPI(this.kpaToken);
             // let kpaExistProjects = await kpaProjectAPI.getAllProject();
             let kpaExistProjects : KPAProjectModel[] = [];
             status.totalExistingRecord = kpaExistProjects.length
             console.log(kpaExistProjects)
 
-            let rivetAPI = new RivetAPI(this.config.clientId, this.config.token);
+            let rivetAPI = new RivetAPI(this.clientId, this.token);
             let projects = await rivetAPI.getProjects();
             status.totalSourceRecord = projects.length
 
@@ -53,7 +68,7 @@ export class RivetProjectJob implements IJob {
                 if (kpaProject == null) {
                     kpaProject = new KPAProjectModel();
                 } else {
-                    if (!this.config.isEditProject) {
+                    if (!this.isEditProject) {
                         // console.log(`Skip Project because of Cannot Allow to edit ${project.jobName}`)
                         status.skippedRecord++
                         continue;
@@ -75,7 +90,7 @@ export class RivetProjectJob implements IJob {
 
             //Send Data
             console.log(kpaProjects.length)
-            const success = await kpaProjectAPI.saveProject(this.config.kpaSite, this.config.emailReport, kpaProjects)
+            const success = await kpaProjectAPI.saveProject(this.kpaSite, this.emailReport, kpaProjects)
             if (!success) {
                 console.log('Failed to save Project')
             }
