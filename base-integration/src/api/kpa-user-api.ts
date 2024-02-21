@@ -46,8 +46,8 @@ export class KPAUserAPI {
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
-            failureEmails: emailReport,
-            successEmails: emailReport
+            failureEmails: [],
+            successEmails: []
         });
 
         return data.ok;

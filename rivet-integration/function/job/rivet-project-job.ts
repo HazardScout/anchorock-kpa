@@ -63,12 +63,12 @@ export class RivetProjectJob implements IJob {
                 //Build KPA project Data and Check existing
                 kpaProject.name = project.jobName;
                 kpaProject.code = project.jobNumber;
-                kpaProject.isActive = project.jobStatus === 'In Progress'
+                kpaProject.isActive = project.jobStatus === 'In-Progress'
                 kpaProject.address = project.address;
                 kpaProject.city = project.city;
                 kpaProject.state = project.state;
                 kpaProject.zip = project.zip;
-                
+
                 kpaProjects.push(kpaProject);
                 status.upsertRecord++
             }
