@@ -1,16 +1,17 @@
 import { Context, Handler } from "aws-lambda";
+import { debuglog } from 'util';
 import { JobStatus } from "../../base-integration/src/job";
 import { WorkerStatus } from "../../base-integration/src/worker";
 import { KPAProcoreConfigurationDB } from "./mongodb";
 import { ProcoreProjectJob, ProcoreUserJob } from "./job";
 
-// Handler
-export const executionLambdaHandler : Handler = async (event: any, context: Context) => {
-  console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
-  console.log('## EVENT: ' + serialize(event))
-  console.log('## CONTEXT: ' + serialize(context))
-  
-  console.log("Execute Procore Execution Start");
+const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
+  const logger = kpaOptions?.logger || console.log;
+  debuglog('env')('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
+  logger('## EVENT: ' + serialize(event))
+  logger('## CONTEXT: ' + serialize(context || kpaOptions))
+
+  logger("Execute Procore Execution Start");
   let workerStatus = new WorkerStatus('Procore Execution Handler');
 
   try {
@@ -57,26 +58,40 @@ export const executionLambdaHandler : Handler = async (event: any, context: Cont
         }
       }
     }
-    
-    
+
+
   } catch(e) {
     workerStatus.error = String(e);
-    console.log(`Worker Stop with Error : ${e}`)
+    logger(`Worker Stop with Error : ${e}`)
   } finally {
     workerStatus.done()
   }
-  
-  console.log("Execute Procore Execution Done");
-  
+
+  logger("Execute Procore Execution Done");
+
   const response = {
     "statusCode": 200,
     "source": "Procore Execution Integration",
     "body": workerStatus,
   }
-  
+
   return response
 }
 
-var serialize = function(object: any) {
+export const executionLambdaHandler : Handler = async (event: any, context: Context) => {
+  return exec(event, context);
+}
+
+export const executionKPAHandler : KPAHandler = async (event: any, kpaOptions: KPAOptions) => {
+  return exec(event, undefined, kpaOptions);
+}
+
+const serialize = function(object: any) {
   return JSON.stringify(object, null, 2)
 }
+
+export type KPAOptions = {
+  logger?: (...data:any[]) => void,
+}
+
+export type KPAHandler = (event: any, kpaOptions:KPAOptions) => any;

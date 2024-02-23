@@ -1,8 +1,12 @@
 import { readFileSync } from "fs";
-import { rivetWorkerLambdaHandler } from "../function/rivet-worker";
-import { rivetUserLambdaHandler } from "../function/rivet-user-worker";
-import { rivetProjectLambdaHandler } from "../function/rivet-project-worker";
-
+import { rivetWorkerLambdaHandler } from "rivet/function/rivet-worker";
+import { rivetUserLambdaHandler } from "rivet/function/rivet-user-worker";
+import { rivetProjectLambdaHandler } from "rivet/function/rivet-project-worker";
+import {
+  describe,
+  it,
+  expect,
+} from '@jest/globals';
 
 require('dotenv').config();
 

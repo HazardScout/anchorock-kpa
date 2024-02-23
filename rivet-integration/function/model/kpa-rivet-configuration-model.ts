@@ -10,4 +10,13 @@ export class KPARivetConfigurationModel extends KPABaseConfigurationModel {
         this.clientId = data['client_id'];
         this.token = data['token'];
     }
+
+    syncChanges():Document {
+        super.syncChanges();
+
+        this.doc['client_id'] = this.clientId;
+        this.doc['token'] = this.token;
+
+        return this.doc;
+    }
 }

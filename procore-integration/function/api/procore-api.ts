@@ -1,13 +1,13 @@
 import axios, { Axios } from "axios";
-import { ProcoreAuthModel, ProcoreCompanyModel, ProcoreProjectModel, ProcoreUserModel } from "../model";
+import { procoreContext, ProcoreCompanyModel, ProcoreProjectModel, ProcoreUserModel } from "../model";
 
 export class ProcoreAPI {
-    auth: ProcoreAuthModel;
+    auth: procoreContext;
     authInstance: Axios;
     apiInstance: Axios;
-    resaveToken: (auth: ProcoreAuthModel) => Promise<void>;
+    resaveToken: (auth: procoreContext) => Promise<void>;
 
-    constructor(auth: ProcoreAuthModel, resaveToken: (auth: ProcoreAuthModel) => Promise<void>) {
+    constructor(auth: procoreContext, resaveToken: (auth: procoreContext) => Promise<void>) {
         this.auth = auth;
         this.resaveToken = resaveToken;
 
@@ -29,13 +29,13 @@ export class ProcoreAPI {
         this.apiInstance.defaults.headers.post['Content-Type'] = 'application/json';
     }
 
-    async refreshToken(): Promise<ProcoreAuthModel> {
+    async refreshToken(): Promise<procoreContext> {
         try {
             const { data } = await this.authInstance.post('', {grant_type: 'refresh_token', refresh_token: this.auth.refreshToken});
 
             const accessToken = data['access_token'];
             const refreshToken = data['refresh_token'];
-            return new ProcoreAuthModel(accessToken, refreshToken);
+            return new procoreContext(accessToken, refreshToken);
         } catch(e) {
             throw {'message':'Refresh Token Failed'};
         }
@@ -73,7 +73,7 @@ export class ProcoreAPI {
     }
 
     async getProjects(companyId: number) : Promise<ProcoreProjectModel[]> {
-        
+
         const result: ProcoreProjectModel[] = [];
         try {
             const { data } = await this.apiInstance
@@ -91,7 +91,7 @@ export class ProcoreAPI {
                 if (this.auth.refreshToken === '1') {
                     throw {'message':'Request Failed - Invalid token and refresh token'};
                 }
-                
+
                 this.auth = await this.refreshToken();
                 await this.resaveToken(this.auth)
 

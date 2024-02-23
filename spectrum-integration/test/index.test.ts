@@ -1,8 +1,12 @@
 import { readFileSync } from "fs";
-import { workerLambdaHandler } from "../function/spectrum-worker";
-import { spectrumUserLambdaHandler } from "../function/spectrum-user-worker";
-import { spectrumProjectLambdaHandler } from "../function/spectrum-project-worker";
-
+import { workerLambdaHandler } from "spectrum/function/spectrum-worker";
+import { spectrumUserLambdaHandler } from "spectrum/function/spectrum-user-worker";
+import { spectrumProjectLambdaHandler } from "spectrum/function/spectrum-project-worker";
+import {
+  describe,
+  it,
+  expect,
+} from '@jest/globals';
 
 require('dotenv').config();
 

@@ -1,0 +1,23 @@
+{
+  "name": "anchorock-kpa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf dist; npx tsc --outDir dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "procore": "file:procore-integration",
+    "rivet": "file:rivet-integration",
+    "sample": "file:sample-integration",
+    "spectrum": "file:spectrum-integration"
+  },
+  "devDependencies": {
+    "@jest/globals": "29.7.0",
+    "ts-node": "10.9.2"
+  }
+}

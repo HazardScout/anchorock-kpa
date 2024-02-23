@@ -1,5 +1,9 @@
-import { lambdaHandler } from "../function"
-
+import { lambdaHandler } from "sample/function"
+import {
+  describe,
+  it,
+  expect,
+} from '@jest/globals';
 
 require('dotenv').config();
 

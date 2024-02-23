@@ -1,2 +1,2 @@
 export { JobStatus } from "./job-status";
-export { IJob } from "./job-interface"
+export type { IJob } from "./job-interface"

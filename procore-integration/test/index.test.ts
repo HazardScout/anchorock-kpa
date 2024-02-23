@@ -1,7 +1,11 @@
-import { lambdaHandler } from "../function"
 import { readFileSync } from "fs";
-import { executionLambdaHandler } from "../function/procore-execution-worker";
-import { extractionLambdaHandler } from "../function/procore-extraction-worker";
+import { executionLambdaHandler } from "procore/function/procore-execution-worker";
+import { extractionLambdaHandler } from "procore/function/procore-extraction-worker";
+import {
+  describe,
+  it,
+  expect,
+} from '@jest/globals';
 
 require('dotenv').config();
 
