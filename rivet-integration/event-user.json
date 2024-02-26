@@ -12,7 +12,7 @@
             },
             "messageAttributes": {
                 "clientId": {
-                    "stringValue": "id_tmp",
+                    "stringValue": "2c709600-a414-433f-a2af-17710dc6386d",
                     "stringListValues": [],
                     "binaryListValues": [],
                     "dataType": "String"
@@ -24,7 +24,7 @@
                     "dataType": "String"
                 },
                 "token": {
-                    "stringValue": "secret_tmp",
+                    "stringValue": "55d60a7e7079879583a5003f1ba9e58b91d3a241c4c885738f5bd1efd4187835",
                     "stringListValues": [],
                     "binaryListValues": [],
                     "dataType": "String"

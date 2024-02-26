@@ -3,7 +3,6 @@ import { Document } from "mongodb";
 export abstract class KPABaseConfigurationModel {
     kpaSite: string;
     kpaToken: string;
-    emailReport : string[];
     isSyncUser : boolean;
     isSyncProject : boolean;
     isEditUser : boolean;
@@ -15,7 +14,6 @@ export abstract class KPABaseConfigurationModel {
     constructor(data: Document) {
         this.kpaSite = data['kpa_site'];
         this.kpaToken = data['kpa_token'];
-        this.emailReport = data['email_report'];
         this.isSyncUser = data['is_sync_user'];
         this.isSyncProject = data['is_sync_project'];
         this.isEditUser = data['is_edit_user'];

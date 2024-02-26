@@ -12,7 +12,6 @@ export class RivetProjectJob implements IJob {
     clientId: string;
     token: string;
     isEditProject: boolean;
-    emailReport: string[];
     config: any;
 
     constructor(config: any) {
@@ -24,9 +23,6 @@ export class RivetProjectJob implements IJob {
         this.clientId = config["clientId"]["stringValue"];
         this.token = config["token"]["stringValue"];
         this.isEditProject = config["isEditProject"]["stringValue"] == '1';
-
-        const emailReportString = config["emailReport"]["stringValue"];
-        this.emailReport = JSON.parse(emailReportString);
     }
 
     async execute(status:JobStatus): Promise<void> {
@@ -75,6 +71,10 @@ export class RivetProjectJob implements IJob {
                     }
                 }
 
+                if (project.jobName.includes("\"")) {
+                    project.jobName = project.jobName.replace("\"", "'");
+                }
+
                 //Build KPA project Data and Check existing
                 kpaProject.name = project.jobName;
                 kpaProject.code = project.jobNumber;
@@ -90,7 +90,7 @@ export class RivetProjectJob implements IJob {
 
             //Send Data
             console.log(kpaProjects.length)
-            const success = await kpaProjectAPI.saveProject(this.kpaSite, this.emailReport, kpaProjects)
+            const success = await kpaProjectAPI.saveProject(this.kpaSite, kpaProjects)
             if (!success) {
                 console.log('Failed to save Project')
             }

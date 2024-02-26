@@ -10,21 +10,17 @@ export class SpectrumProjectJob implements IJob {
     clientId: string;
     clientSecret: string;
     isEditProject: boolean;
-    emailReport: string[];
     config: any;
 
     constructor(config: any) {
         this.name = 'Spectrum Project Job';
         this.config = config;
-        
+
         this.kpaSite = config["kpaSite"]["stringValue"];
         this.kpaToken = config["kpaToken"]["stringValue"];
         this.clientId = config["clientId"]["stringValue"];
         this.clientSecret = config["clientSecret"]["stringValue"];
         this.isEditProject = config["isEditProject"]["stringValue"] == '1';
-
-        const emailReportString = config["emailReport"]["stringValue"];
-        this.emailReport = JSON.parse(emailReportString);
     }
 
     async execute(status: JobStatus): Promise<void> {
@@ -85,7 +81,7 @@ export class SpectrumProjectJob implements IJob {
             }
             //Send Data
             console.log(kpaProjects.length)
-            const success = await kpaProjectAPI.saveProject(this.kpaSite, this.emailReport, kpaProjects)
+            const success = await kpaProjectAPI.saveProject(this.kpaSite, kpaProjects)
             if (!success) {
                 console.log('Failed to save Project')
             }

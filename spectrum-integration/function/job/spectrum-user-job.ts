@@ -10,7 +10,6 @@ export class SpectrumUserJob implements IJob {
     clientId: string;
     clientSecret: string;
     isEditUser: boolean;
-    emailReport: string[];
     config: any;
     defaultRole: string;
     welcomeEmail: boolean;
@@ -28,9 +27,6 @@ export class SpectrumUserJob implements IJob {
         this.defaultRole = config["defaultRole"]["stringValue"];
         this.welcomeEmail = config["welcomeEmail"]["stringValue"] === '1';
         this.resetPassword = config["resetPassword"]["stringValue"] === '1';
-
-        const emailReportString = config["emailReport"]["stringValue"];
-        this.emailReport = JSON.parse(emailReportString);
     }
 
     async execute(status: JobStatus): Promise<void> {
@@ -104,7 +100,7 @@ export class SpectrumUserJob implements IJob {
             
             //Send Data
             console.log(kpaUsers.length)
-            const success = await kpaUserAPI.saveUser(this.kpaSite, this.emailReport, kpaUsers)
+            const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers)
             if (!success) {
                 console.log('Failed to save Users')
             }

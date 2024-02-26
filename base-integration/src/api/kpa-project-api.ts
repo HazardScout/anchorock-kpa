@@ -22,11 +22,19 @@ export class KPAProjectAPI {
         return result;
     }
 
-    async saveProject(site: string, emailReport: string[], models: KPAProjectModel[]) : Promise<boolean> {
+    async saveProject(site: string, models: KPAProjectModel[]) : Promise<boolean> {
 
         let headers = 'Site,RecordType,Name,Number,IsActive,Address,City,State,ZIP';
         var content = `${headers}`;
+        var addedProjectNumber : string[] = [];
         for(var model of models) {
+
+            if (addedProjectNumber.indexOf(model.code) > 0) {
+                continue;
+            }
+
+            addedProjectNumber.push(model.code);
+
             content = `${content}\n${site},Project`
             content = `${content},${Helper.csvContentChecker(model.name)}`
             content = `${content},${Helper.csvContentChecker(model.code)}`
@@ -35,6 +43,7 @@ export class KPAProjectAPI {
             content = `${content},${Helper.csvContentChecker(model.city)}`
             content = `${content},${Helper.csvContentChecker(model.state)}`
             content = `${content},${Helper.csvContentChecker(model.zip)}`
+            
         }
 
         // console.log(content)
@@ -43,12 +52,16 @@ export class KPAProjectAPI {
 
         const fileData = Buffer.from(content, 'binary').toString('base64');
 
+        console.log(content)
+
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
-            failureEmails: emailReport,
+            failureEmails: [],
             successEmails: []
         });
+
+        console.log(data)
 
         return data.ok;
     }

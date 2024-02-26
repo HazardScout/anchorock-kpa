@@ -46,10 +46,6 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                         StringValue: config.kpaToken,
                         DataType: 'String'
                     },
-                    'emailReport': {
-                        StringValue: JSON.stringify(config.emailReport, null, 2),
-                        DataType: 'String'
-                    },
                     'defaultRole': {
                         StringValue: config.defaultRole,
                         DataType: 'String'
@@ -101,10 +97,6 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                     },
                     'kpaToken': {
                         StringValue: config.kpaToken,
-                        DataType: 'String'
-                    },
-                    'emailReport': {
-                        StringValue: JSON.stringify(config.emailReport, null, 2),
                         DataType: 'String'
                     }
                 },

@@ -85,7 +85,7 @@ export class ProcoreProjectJob implements IJob  {
     
                         //Send Data
                         // console.log(kpaProjects)
-                        const success = await kpaProjectAPI.saveProject(this.config.kpaSite, this.config.emailReport, kpaProjects)
+                        const success = await kpaProjectAPI.saveProject(this.config.kpaSite, kpaProjects)
                         if (!success) {
                             console.log('Failed to save Project')
                         }

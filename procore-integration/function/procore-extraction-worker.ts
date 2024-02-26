@@ -10,15 +10,12 @@ export const extractionLambdaHandler : Handler = async (event: any, context: Con
     //Fetch Configuration
     const configDB = new KPAProcoreConfigurationDB();
     let configs = await configDB.getConfiguration();
-
-    console.log(process.env)
+    
     const sqsInstance = new SQS({
         accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.AWS_SECRET_KEY,
         region: process.env.AWS_REGION
     });
-
-    console.log(sqsInstance)
 
     for(var config of configs) {
         console.log(`Execute Procore Customer: ${config.kpaSite}} Start`);
@@ -34,10 +31,6 @@ export const extractionLambdaHandler : Handler = async (event: any, context: Con
                 },
                 'kpaToken': {
                     StringValue: config.kpaToken,
-                    DataType: 'String'
-                },
-                'emailReport': {
-                    StringValue: JSON.stringify(config.emailReport, null, 2),
                     DataType: 'String'
                 }
             },

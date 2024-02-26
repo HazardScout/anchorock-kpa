@@ -107,7 +107,7 @@ export class ProcoreUserJob implements IJob {
     
                         //Send Data
                         // console.log(kpaUsers)
-                        const success = await kpaUserAPI.saveUser(this.config.kpaSite, this.config.emailReport, kpaUsers)
+                        const success = await kpaUserAPI.saveUser(this.config.kpaSite, kpaUsers)
                         if (!success) {
                             console.log('Failed to save Users')
                         }

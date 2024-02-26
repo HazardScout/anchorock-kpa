@@ -21,10 +21,24 @@ export class KPAUserAPI {
         return result;
     }
 
-    async saveUser(site: string, emailReport:string[], models: KPAUserModel[]) : Promise<boolean> {
+    async saveUser(site: string, models: KPAUserModel[]) : Promise<boolean> {
         let headers = 'Site,RecordType,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail';
         var content = `${headers}`;
+        var addedUsername : string[] = [];
+        var addedEmail : string[] = [];
+
         for(var model of models) {
+            if (addedUsername.indexOf(model.username) > 0) {
+                continue;
+            }
+
+            if (addedEmail.indexOf(model.email) > 0) {
+                continue;
+            }
+
+            addedUsername.push(model.username);
+            addedEmail.push(model.email);
+            
             var dataUser = `${site},Employee`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.employeeNumber)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.firstName)}`
@@ -46,12 +60,16 @@ export class KPAUserAPI {
 
         const fileData = Buffer.from(content, 'binary').toString('base64');
 
+        console.log(content)
+        
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
-            failureEmails: emailReport,
+            failureEmails: [],
             successEmails: []
         });
+
+        console.log(data)
 
         return data.ok;
     }

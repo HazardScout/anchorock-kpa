@@ -12,7 +12,6 @@ export class RivetUserJob implements IJob {
     clientId: string;
     token: string;
     isEditUser: boolean;
-    emailReport: string[];
     config: any;
     defaultRole: string;
     welcomeEmail: boolean;
@@ -30,10 +29,6 @@ export class RivetUserJob implements IJob {
         this.defaultRole = config["defaultRole"]["stringValue"];
         this.welcomeEmail = config["welcomeEmail"]["stringValue"] === '1';
         this.resetPassword = config["resetPassword"]["stringValue"] === '1';
-
-        const emailReportString = config["emailReport"]["stringValue"];
-
-        this.emailReport = JSON.parse(emailReportString);
     }
 
     async execute(status:JobStatus): Promise<void> {
@@ -80,12 +75,17 @@ export class RivetUserJob implements IJob {
                     }
                 }
 
+                if (user.email === null || user.email === 'null') {
+                    status.skippedRecord++
+                    continue;
+                }
+
                 kpaUser.employeeNumber = user.employeeId;
                 kpaUser.firstName = user.firstName
                 kpaUser.lastName = user.lastName;
                 kpaUser.username = user.employeeId;
                 kpaUser.email = user.email;
-                kpaUser.initialPassword = `${user.employeeId}.kpaflex!!`;
+                kpaUser.initialPassword = `KPAFlex2024!!`;
                 kpaUser.role = this.defaultRole;
                 kpaUser.terminationDate = user.terminationDate;
                 kpaUser.welcomeEmail = this.welcomeEmail
@@ -98,7 +98,7 @@ export class RivetUserJob implements IJob {
             //Send Data
             // console.log(kpaUsers)
             console.log(kpaUsers.length)
-            const success = await kpaUserAPI.saveUser(this.kpaSite, this.emailReport, kpaUsers)
+            const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers)
             if (!success) {
                 console.log('Failed to save Users')
             }
