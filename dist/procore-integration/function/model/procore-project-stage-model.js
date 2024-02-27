@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProcoreProjectStageModel = void 0;
+class ProcoreProjectStageModel {
+    constructor() {
+        this.id = 0;
+        this.name = '';
+    }
+}
+exports.ProcoreProjectStageModel = ProcoreProjectStageModel;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvY29yZS1wcm9qZWN0LXN0YWdlLW1vZGVsLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vcHJvY29yZS1pbnRlZ3JhdGlvbi9mdW5jdGlvbi9tb2RlbC9wcm9jb3JlLXByb2plY3Qtc3RhZ2UtbW9kZWwudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsTUFBYSx3QkFBd0I7SUFJakM7UUFDSSxJQUFJLENBQUMsRUFBRSxHQUFHLENBQUMsQ0FBQztRQUNaLElBQUksQ0FBQyxJQUFJLEdBQUcsRUFBRSxDQUFDO0lBQ25CLENBQUM7Q0FDSjtBQVJELDREQVFDIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGNsYXNzIFByb2NvcmVQcm9qZWN0U3RhZ2VNb2RlbCB7XG4gICAgaWQ6IG51bWJlcjtcbiAgICBuYW1lOiBTdHJpbmc7XG5cbiAgICBjb25zdHJ1Y3RvcigpIHtcbiAgICAgICAgdGhpcy5pZCA9IDA7XG4gICAgICAgIHRoaXMubmFtZSA9ICcnO1xuICAgIH1cbn0iXX0=

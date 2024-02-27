@@ -1,7 +1,7 @@
 import { IJob } from "../../../base-integration/src/job";
 import { KPAProjectModel } from "../../../base-integration/src/model";
 import { ProcoreAPI } from "../api";
-import { KPAProcoreConfigurationModel, ProcoreAuthModel } from "../model";
+import { KPAProcoreConfigurationModel, procoreContext } from "../model";
 import { KPAProcoreConfigurationDB } from "../mongodb";
 import { KPAProjectAPI } from "../../../base-integration/src/api";
 import { JobStatus } from "../../../base-integration/src/job";
@@ -23,7 +23,7 @@ export class ProcoreProjectJob implements IJob  {
             let kpaExistProjects : KPAProjectModel[] = [];
             status.totalExistingRecord = kpaExistProjects.length
 
-            let auth = new ProcoreAuthModel(this.config.procoreToken, this.config.procoreRefreshToken);
+            let auth = new procoreContext(this.config.procoreToken, this.config.procoreRefreshToken);
             let procoreAPI = new ProcoreAPI(auth, async (newAuth) => {
                 this.config.procoreToken = newAuth.accessToken;
                 this.config.procoreRefreshToken = newAuth.refreshToken;
@@ -38,7 +38,7 @@ export class ProcoreProjectJob implements IJob  {
                     if (procoreCompany === company.name) {
                         let projects = await procoreAPI.getProjects(company.id);
                         status.totalSourceRecord += projects.length
-    
+
                         let kpaProjects: KPAProjectModel[] = [];
                         for(let project of projects) {
                             //Ignore Project without job number
@@ -78,11 +78,11 @@ export class ProcoreProjectJob implements IJob  {
                             kpaProject.city = project.city;
                             kpaProject.state = project.state_code;
                             kpaProject.zip = project.zip;
-                            
+
                             kpaProjects.push(kpaProject);
                             status.upsertRecord++
                         }
-    
+
                         //Send Data
                         // console.log(kpaProjects)
                         const success = await kpaProjectAPI.saveProject(this.config.kpaSite, kpaProjects)
@@ -97,5 +97,5 @@ export class ProcoreProjectJob implements IJob  {
             //Send an email to failed;
         }
     }
-    
+
 }
