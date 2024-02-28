@@ -1,6 +1,7 @@
 import axios, { Axios } from "axios";
 import { KPAProjectModel } from "../model";
 import { Helper } from "../utilities";
+import { clear } from "console";
 
 export class KPAProjectAPI {
     token: string;
@@ -24,16 +25,53 @@ export class KPAProjectAPI {
 
     async saveProject(site: string, models: KPAProjectModel[]) : Promise<boolean> {
 
-        let headers = 'Site,RecordType,Name,Number,IsActive,Address,City,State,ZIP';
-        var content = `${headers}`;
-        var addedProjectNumber : string[] = [];
-        for(var model of models) {
+        var clearRecords : KPAProjectModel[] = []
+        var duplicateRecords : KPAProjectModel[] = []
 
-            if (addedProjectNumber.indexOf(model.code) > 0) {
-                continue;
+        for (var model of models) {
+            var isDuplicate = false;
+            for (let i = 0; i < clearRecords.length; i++) {
+                var clearRecord : KPAProjectModel = clearRecords[i];
+                if (clearRecord.code === model.code) {
+                    isDuplicate = true;
+                    duplicateRecords.push(model)
+                    duplicateRecords.push(clearRecord)
+                    clearRecords.splice(i, 1);
+                    break;
+                }
             }
 
-            addedProjectNumber.push(model.code);
+            if (!isDuplicate) {
+                for (var duplicateRecord of duplicateRecords) {
+                    if (duplicateRecord.code === model.code) {
+                        isDuplicate = true;
+                        duplicateRecords.push(model)
+                        break;
+                    }
+                }
+            }
+
+            if (!isDuplicate) {
+                clearRecords.push(model)
+            }
+        }
+
+        if (clearRecords.length > 0) {
+            await this.#sendDataToKPA(site, clearRecords)
+        }
+
+        if (duplicateRecords.length > 0) {
+            await this.#sendDataToKPA(site, duplicateRecords)
+        }
+
+        return true;        
+    }
+
+    async #sendDataToKPA(site: string, models: KPAProjectModel[]) : Promise<boolean> {
+
+        let headers = 'Site,RecordType,Name,Number,IsActive,Address,City,State,ZIP';
+        var content = `${headers}`;
+        for(var model of models) {
 
             content = `${content}\n${site},Project`
             content = `${content},${Helper.csvContentChecker(model.name)}`
@@ -46,13 +84,7 @@ export class KPAProjectAPI {
             
         }
 
-        // console.log(content)
-
-        // return true;
-
         const fileData = Buffer.from(content, 'binary').toString('base64');
-
-        console.log(content)
 
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,

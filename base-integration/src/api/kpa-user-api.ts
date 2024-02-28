@@ -1,6 +1,7 @@
 import axios, { Axios } from "axios";
 import { KPAUserModel } from "../model";
 import { Helper } from "../utilities";
+import { clear } from "console";
 
 export class KPAUserAPI {
     token: string;
@@ -22,22 +23,54 @@ export class KPAUserAPI {
     }
 
     async saveUser(site: string, models: KPAUserModel[]) : Promise<boolean> {
+        var clearRecords : KPAUserModel[] = []
+        var duplicateRecords : KPAUserModel[] = []
+
+        for (var model of models) {
+            var isDuplicate = false;
+            for (let i = 0; i < clearRecords.length; i++) {
+                var clearRecord : KPAUserModel = clearRecords[i];
+                if (clearRecord.username === model.username || clearRecord.email === model.email || clearRecord.employeeNumber === model.employeeNumber) {
+                    isDuplicate = true;
+                    duplicateRecords.push(model)
+                    duplicateRecords.push(clearRecord)
+                    clearRecords.splice(i, 1);
+                    break;
+                }
+            }
+
+            if (!isDuplicate) {
+                for (var duplicateRecord of duplicateRecords) {
+                    if (duplicateRecord.username === model.username || duplicateRecord.email === model.email || duplicateRecord.employeeNumber === model.employeeNumber) {
+                        isDuplicate = true;
+                        duplicateRecords.push(model)
+                        break;
+                    }
+                }
+            }
+
+            if (!isDuplicate) {
+                clearRecords.push(model)
+            }
+        }
+
+        if (clearRecords.length > 0) {
+            await this.#sendDataToKPA(site, clearRecords)
+        }
+
+        if (duplicateRecords.length > 0) {
+            await this.#sendDataToKPA(site, duplicateRecords)
+        }
+
+        return true;
+    }
+
+    async #sendDataToKPA(site: string, models: KPAUserModel[]) : Promise<boolean> {
+
         let headers = 'Site,RecordType,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail';
         var content = `${headers}`;
-        var addedUsername : string[] = [];
-        var addedEmail : string[] = [];
 
         for(var model of models) {
-            if (addedUsername.indexOf(model.username) > 0) {
-                continue;
-            }
-
-            if (addedEmail.indexOf(model.email) > 0) {
-                continue;
-            }
-
-            addedUsername.push(model.username);
-            addedEmail.push(model.email);
             
             var dataUser = `${site},Employee`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.employeeNumber)}`
@@ -55,12 +88,7 @@ export class KPAUserAPI {
             content = `${content}\n${dataUser}`
         }
 
-        // console.log(content)
-        // return true;
-
         const fileData = Buffer.from(content, 'binary').toString('base64');
-
-        console.log(content)
         
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
