@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProcoreAuthModel = void 0;
+class ProcoreAuthModel {
+    constructor(accessToken, refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
+}
+exports.ProcoreAuthModel = ProcoreAuthModel;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvY29yZS1hdXRoLW1vZGVsLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vcHJvY29yZS1pbnRlZ3JhdGlvbi9mdW5jdGlvbi9tb2RlbC9wcm9jb3JlLWF1dGgtbW9kZWwudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsTUFBYSxnQkFBZ0I7SUFJekIsWUFBWSxXQUFtQixFQUFFLFlBQW9CO1FBQ2pELElBQUksQ0FBQyxXQUFXLEdBQUcsV0FBVyxDQUFDO1FBQy9CLElBQUksQ0FBQyxZQUFZLEdBQUcsWUFBWSxDQUFDO0lBQ3JDLENBQUM7Q0FDSjtBQVJELDRDQVFDIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGNsYXNzIFByb2NvcmVBdXRoTW9kZWwge1xuICAgIGFjY2Vzc1Rva2VuOiBzdHJpbmc7XG4gICAgcmVmcmVzaFRva2VuOiBzdHJpbmc7XG5cbiAgICBjb25zdHJ1Y3RvcihhY2Nlc3NUb2tlbjogc3RyaW5nLCByZWZyZXNoVG9rZW46IHN0cmluZykge1xuICAgICAgICB0aGlzLmFjY2Vzc1Rva2VuID0gYWNjZXNzVG9rZW47XG4gICAgICAgIHRoaXMucmVmcmVzaFRva2VuID0gcmVmcmVzaFRva2VuO1xuICAgIH1cbn0iXX0=

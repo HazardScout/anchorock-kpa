@@ -10,4 +10,13 @@ export class KPASpectrumConfigurationModel extends KPABaseConfigurationModel {
         this.clientId = data['client_id'];
         this.clientSecret = data['client_secret'];
     }
+
+    syncChanges():Document {
+        super.syncChanges();
+
+        this.doc['client_id'] = this.clientId;
+        this.doc['client_secret'] = this.clientSecret;
+
+        return this.doc;
+    }
 }

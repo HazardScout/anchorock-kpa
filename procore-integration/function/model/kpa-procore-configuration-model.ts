@@ -6,10 +6,20 @@ export class KPAProcoreConfigurationModel extends KPABaseConfigurationModel {
     procoreToken : string;
     procoreRefreshToken : string;
 
-    constructor(data: Document) {
+    constructor(data?: Document) {
         super(data)
-        this.procoreCompanies = data['procore_companies'];
-        this.procoreToken = data['procore_token'];
-        this.procoreRefreshToken = data['procore_refresh_token'];
+        this.procoreCompanies = this.doc['procore_companies'];
+        this.procoreToken = this.doc['procore_token'];
+        this.procoreRefreshToken = this.doc['procore_refresh_token'];
+    }
+
+    syncChanges():Document {
+        super.syncChanges();
+
+        this.doc['procore_companies'] = this.procoreCompanies;
+        this.doc['procore_token'] = this.procoreToken;
+        this.doc['procore_refresh_token'] = this.procoreRefreshToken;
+
+        return this.doc;
     }
 }

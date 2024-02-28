@@ -2,7 +2,7 @@ import { KPAUserAPI } from "../../../base-integration/src/api";
 import { IJob } from "../../../base-integration/src/job";
 import { KPAUserModel } from "../../../base-integration/src/model";
 import { ProcoreAPI } from "../api";
-import { KPAProcoreConfigurationModel, ProcoreAuthModel } from "../model";
+import { KPAProcoreConfigurationModel, procoreContext } from "../model";
 import { KPAProcoreConfigurationDB } from "../mongodb";
 import { JobStatus } from "../../../base-integration/src/job";
 
@@ -24,7 +24,7 @@ export class ProcoreUserJob implements IJob {
             console.log(kpaExistUsers)
 
             //Fetch Procore Company
-            let auth = new ProcoreAuthModel(this.config.procoreToken, this.config.procoreRefreshToken);
+            let auth = new procoreContext(this.config.procoreToken, this.config.procoreRefreshToken);
             let procoreAPI = new ProcoreAPI(auth, async (newAuth) => {
                 this.config.procoreToken = newAuth.accessToken;
                 this.config.procoreRefreshToken = newAuth.refreshToken;
@@ -40,7 +40,7 @@ export class ProcoreUserJob implements IJob {
                     if (procoreCompany === company.name) {
                         let users = await procoreAPI.getUsers(company.id);
                         status.totalSourceRecord += users.length
-    
+
                         let kpaUsers : KPAUserModel[] = [];
                         for(let user of users) {
                             if (user.employee_id == null || user.employee_id == '') {
@@ -85,7 +85,7 @@ export class ProcoreUserJob implements IJob {
                                     status.inactivatedRecord++
                                 }
                             }
-    
+
                             kpaUser.employeeNumber = user.employee_id;
                             kpaUser.firstName = user.first_name
                             kpaUser.lastName = user.last_name;
@@ -100,11 +100,11 @@ export class ProcoreUserJob implements IJob {
                             if (!user.is_active && kpaUser.terminationDate == null) {
                                 kpaUser.terminationDate = new Date().toDateString();
                             }
-    
+
                             kpaUsers.push(kpaUser);
                             status.upsertRecord++;
                         }
-    
+
                         //Send Data
                         // console.log(kpaUsers)
                         const success = await kpaUserAPI.saveUser(this.config.kpaSite, kpaUsers)
@@ -119,5 +119,5 @@ export class ProcoreUserJob implements IJob {
             //Send an email to failed;
         }
     }
-    
+
 }

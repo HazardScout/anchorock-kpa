@@ -2,7 +2,6 @@ import { Document, MongoClient } from "mongodb";
 import { KPABaseConfigurationDB } from "../../../base-integration/src/mongodb";
 import { KPAProcoreConfigurationModel } from "../model";
 
-
 export class KPAProcoreConfigurationDB extends KPABaseConfigurationDB<KPAProcoreConfigurationModel> {
     collectionName: string;
 
@@ -19,7 +18,7 @@ export class KPAProcoreConfigurationDB extends KPABaseConfigurationDB<KPAProcore
         const mongoClient = await MongoClient.connect(this.mongoDbUrl);
         const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`)
         let mongoDbCollection = mongoDb.collection(this.collectionName);
-        
+
         await mongoDbCollection.updateOne({kpa_token: data.kpaToken}, {$set: {
             procore_token: data.procoreToken,
             procore_refresh_token: data.procoreRefreshToken
@@ -28,5 +27,4 @@ export class KPAProcoreConfigurationDB extends KPABaseConfigurationDB<KPAProcore
         await mongoClient.close();
         return data;
     }
-    
 }
