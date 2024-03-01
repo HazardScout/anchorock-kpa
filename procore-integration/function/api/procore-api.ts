@@ -77,7 +77,7 @@ export class ProcoreAPI {
         const result: ProcoreProjectModel[] = [];
         try {
             const { data } = await this.apiInstance
-            .get('/projects', { params: { company_id: companyId } })
+            .get('/projects', { params: { company_id: companyId } , headers: { 'Procore-Company-Id': `${companyId}`}})
             for (var projectData of data) {
                 let project = Object.assign(new ProcoreCompanyModel(), projectData);
                 result.push(project);
@@ -108,7 +108,7 @@ export class ProcoreAPI {
         const result: ProcoreUserModel[] = [];
         try {
             const { data } = await this.apiInstance
-            .get('/users', { params: { company_id: companyId } })
+            .get('/users', { params: { company_id: companyId } , headers: { 'Procore-Company-Id': `${companyId}`}})
             for (var userData of data) {
                 let user = Object.assign(new ProcoreUserModel(), userData);
                 result.push(user);

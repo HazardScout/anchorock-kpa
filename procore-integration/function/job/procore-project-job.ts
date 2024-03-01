@@ -34,8 +34,8 @@ export class ProcoreProjectJob implements IJob  {
             let companies = await procoreAPI.getCompanies();
             status.totalSourceRecord = 0
             for(let company of companies) {
-                for(let procoreCompany of this.config.procoreCompanies) {
-                    if (procoreCompany === company.name) {
+                for(let procoreCompanyId of this.config.procoreCompanyIds) {
+                    if (procoreCompanyId === company.id) {
                         let projects = await procoreAPI.getProjects(company.id);
                         status.totalSourceRecord += projects.length
 

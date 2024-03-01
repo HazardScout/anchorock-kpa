@@ -36,8 +36,8 @@ export class ProcoreUserJob implements IJob {
             status.totalSourceRecord = 0
 
             for(let company of companies) {
-                for(let procoreCompany of this.config.procoreCompanies) {
-                    if (procoreCompany === company.name) {
+                for(let procoreCompanyId of this.config.procoreCompanyIds) {
+                    if (procoreCompanyId === company.id) {
                         let users = await procoreAPI.getUsers(company.id);
                         status.totalSourceRecord += users.length
 
