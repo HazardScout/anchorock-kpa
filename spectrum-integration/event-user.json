@@ -1,0 +1,58 @@
+{
+    "Records": [
+        {
+            "messageId": "bcdc6fb1-9a1d-4e4a-9186-e84920afdf22",
+            "receiptHandle": "AQEB6Sb18/u+o7Pg1neg7JhIbohvjzTC+RLPW1/iDlqrmFBlU21ch8J3VbxCcXgpgyU6g890tdDq2WIoP8/YYrqSsRsYtJou38iTVpf8nqXw9Lmwk/lvHC7cr6BPfPVtd3CtJA7OEy0283nJV2Nh1gJH7rXUu75/iKXYuVRrdqAn7Nw3i2WTl6R+Gkw8uX8Y05S43Dl8gw5v7KsUjMDQvzwCxYEmtSe+JNPOJxEC1FTII+rsZ16OUUNqR4Shz7IcEijYW17UPVQraWaRt3X2iN36C+GZCafS0oKb/JbQS0xqI7kCbRdg2+f6Rw+eIyMllEbzHP1+/OSSgu3rME/sxl0hf1XPGAOyN246aXGXv2/0GmssyQBTeszrusdTAjmc6302dnoDfGxMtL8u8T7e2GkciA==",
+            "body": "User Integration - yogi",
+            "attributes": {
+                "ApproximateReceiveCount": "1",
+                "SentTimestamp": "1706091077621",
+                "SenderId": "AIDAIWOJAYKTVLC76ITKO",
+                "ApproximateFirstReceiveTimestamp": "1706091077623"
+            },
+            "messageAttributes": {
+                "clientId": {
+                    "stringValue": "id_tmp",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "kpaSite": {
+                    "stringValue": "yogi",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "clientSecret": {
+                    "stringValue": "secret_tmp",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "isEditUser": {
+                    "stringValue": "1",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "emailReport": {
+                    "stringValue": "[\n  \"yogi@anchorock.com\"\n]",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                },
+                "kpaToken": {
+                    "stringValue": "kpaehs_live_sUzekkgxqmGMq3VgiXwhr1fij8AsU3JM",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                }
+            },
+            "md5OfMessageAttributes": "7fd165c81c50bf72a3a3b2aa25e786ef",
+            "md5OfBody": "85363c80e44002d44d5cd3d8f45e07ab",
+            "eventSource": "aws:sqs",
+            "eventSourceARN": "arn:aws:sqs:us-west-2:348081379049:KPASpectrumUser",
+            "awsRegion": "us-west-2"
+        }
+    ]
+}

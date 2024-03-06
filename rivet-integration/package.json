@@ -1,0 +1,49 @@
+{
+  "name": "rivet-integration",
+  "version": "1.0.0",
+  "private": true,
+  "main": "function/index.ts",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.131",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.8",
+    "esbuild": "^0.19.11",
+    "jest": "29.7.0",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "2.1484.0",
+    "aws-xray-sdk-core": "3.5.3",
+    "axios": "1.4.0",
+    "dotenv": "^16.3.1",
+    "glob": "7.1.6",
+    "jest": "29.6.2",
+    "mime": "^1.6.0",
+    "mongodb": "^6.0.0",
+    "mssql": "^10.0.1",
+    "sequelize": "^6.33.0",
+    "tedious": "^16.4.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "build": "esbuild function/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
+    "postbuild": "cd dist && zip -r index.zip index.js*",
+
+    "test": "jest",
+    "test-user": "jest -t 'running-test lambda user-handler'",
+    "test-project": "jest -t 'running-test lambda project-handler'",
+    "test-worker": "jest -t 'running-test lambda worker-handler'",
+    "prebuild": "rm -rf dist",
+    "build-worker": "esbuild function/rivet-worker.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/rivet-worker.js",
+    "build-user": "esbuild function/rivet-user-worker.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/rivet-user-worker.js",
+    "build-project": "esbuild function/rivet-project-worker.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/rivet-project-worker.js",
+    "postbuild-worker": "cd dist && zip -r worker.zip rivet-worker.js*",
+    "postbuild-user": "cd dist && zip -r user.zip rivet-user-worker.js*",
+    "postbuild-project": "cd dist && zip -r project.zip rivet-project-worker.js*"
+    
+  }
+}
