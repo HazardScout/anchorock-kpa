@@ -18,6 +18,9 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
     });
 
     for(var config of configs) {
+        if (!config.active) {
+            continue;
+        }
         console.log(`Execute Spectrum Customer: ${config.kpaSite} ${config.clientId} ${config.clientSecret} Start`);
 
         if (config.isSyncUser) {
