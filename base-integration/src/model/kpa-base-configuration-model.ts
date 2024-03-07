@@ -11,6 +11,7 @@ export abstract class KPABaseConfigurationModel {
     defaultRole : string;
     isForceResetPassword : boolean;
     isWelcomeEmail : boolean;
+    active : boolean;
 
     constructor(document?: Document) {
         this.doc = document || {};
@@ -23,6 +24,7 @@ export abstract class KPABaseConfigurationModel {
         this.defaultRole = this.doc['default_role'];
         this.isForceResetPassword = !!this.doc['is_force_reset_password'];
         this.isWelcomeEmail = !!this.doc['is_welcome_email'];
+        this.active = !!this.doc['active'];
     }
 
     syncChanges():Document {
@@ -35,6 +37,7 @@ export abstract class KPABaseConfigurationModel {
         this.doc['default_role'] = this.defaultRole;
         this.doc['is_force_reset_password'] = !!this.isForceResetPassword;
         this.doc['is_welcome_email'] = !!this.isWelcomeEmail;
+        this.doc['active'] = !!this.active;
 
         return this.doc;
     }

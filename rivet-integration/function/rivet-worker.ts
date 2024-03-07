@@ -18,6 +18,9 @@ export const rivetWorkerLambdaHandler : Handler = async (event: any, context: Co
     });
 
     for(var config of configs) {
+        if (!config.active) {
+            continue;
+        }
         console.log(`Execute Rivet Customer: ${config.kpaSite} Start`);
 
         if (config.isSyncUser) {
