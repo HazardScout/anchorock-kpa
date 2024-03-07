@@ -10,6 +10,7 @@ export declare abstract class KPABaseConfigurationModel {
     defaultRole: string;
     isForceResetPassword: boolean;
     isWelcomeEmail: boolean;
+    active: boolean;
     constructor(document?: Document);
     syncChanges(): Document;
 }
