@@ -62,7 +62,7 @@ const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
 
   } catch(e) {
     workerStatus.error = String(e);
-    logger(`Worker Stop with Error : ${e}`)
+    logger(`Worker Stop with Error : ${{ msg: String(e), stack: e.stack }}`)
   } finally {
     workerStatus.done()
   }

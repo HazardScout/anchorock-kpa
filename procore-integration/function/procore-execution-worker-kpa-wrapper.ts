@@ -27,9 +27,7 @@ export const exec = async (
       logger: logToJob,
     });
 
-    logToJob(JSON.stringify({
-      status: body,
-    }));
+    logToJob(JSON.stringify(body));
 
     callback();
   } catch (error) {
