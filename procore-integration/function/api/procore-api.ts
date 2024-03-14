@@ -12,16 +12,16 @@ export class ProcoreAPI {
         this.resaveToken = resaveToken;
 
         this.authInstance = axios.create({
-            baseURL: 'https://login.procore.com/oauth/token/'
-            // baseURL: 'https://login-sandbox.procore.com/oauth/token/'
+            // baseURL: 'https://login.procore.com/oauth/token/'
+            baseURL: 'https://login-sandbox.procore.com/oauth/token/'
         });
 
         this.authInstance.defaults.headers.post['Accept'] = 'application/json';
         this.authInstance.defaults.headers.post['Content-Type'] = 'application/json';
 
         this.apiInstance = axios.create({
-            baseURL: 'https://api.procore.com/rest/v1.0/'
-            // baseURL: 'https://sandbox.procore.com/rest/v1.0/'
+            // baseURL: 'https://api.procore.com/rest/v1.0/'
+            baseURL: 'https://sandbox.procore.com/rest/v1.0/'
         });
 
         this.apiInstance.defaults.headers.common['Authorization'] = `Bearer ${auth.accessToken}`;
