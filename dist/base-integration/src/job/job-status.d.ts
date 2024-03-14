@@ -8,8 +8,12 @@ export declare class JobStatus {
     upsertRecord: number;
     inactivatedRecord: number;
     skippedRecord: number;
-    error: Error | string;
+    error: ErrorLike | string;
     constructor(jobName: string);
     start(): void;
     done(): void;
 }
+export type ErrorLike = {
+    message: string;
+    stack?: string;
+};
