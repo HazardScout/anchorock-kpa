@@ -23,43 +23,50 @@ export class KPAUserAPI {
     }
 
     async saveUser(site: string, models: KPAUserModel[]) : Promise<boolean> {
-        var clearRecords : KPAUserModel[] = []
-        var duplicateRecords : KPAUserModel[] = []
+        var cleanRecords : KPAUserModel[] = []
+        var invalidRecords : KPAUserModel[] = []
 
         for (var model of models) {
+
+            //Ignore user without employee number
+            if (model.employeeNumber === null || model.employeeNumber === '') {
+                invalidRecords.push(model)
+                continue;
+            }
+
             var isDuplicate = false;
-            for (let i = 0; i < clearRecords.length; i++) {
-                var clearRecord : KPAUserModel = clearRecords[i];
-                if (clearRecord.username === model.username || clearRecord.email === model.email || clearRecord.employeeNumber === model.employeeNumber) {
+            for (let i = 0; i < cleanRecords.length; i++) {
+                var clearRecord : KPAUserModel = cleanRecords[i];
+                if (clearRecord.username === model.username || clearRecord.employeeNumber === model.employeeNumber) {
                     isDuplicate = true;
-                    duplicateRecords.push(model)
-                    duplicateRecords.push(clearRecord)
-                    clearRecords.splice(i, 1);
+                    invalidRecords.push(model)
+                    invalidRecords.push(clearRecord)
+                    cleanRecords.splice(i, 1);
                     break;
                 }
             }
 
             if (!isDuplicate) {
-                for (var duplicateRecord of duplicateRecords) {
-                    if (duplicateRecord.username === model.username || duplicateRecord.email === model.email || duplicateRecord.employeeNumber === model.employeeNumber) {
+                for (var invalidRecord of invalidRecords) {
+                    if (invalidRecord.username === model.username || invalidRecord.employeeNumber === model.employeeNumber) {
                         isDuplicate = true;
-                        duplicateRecords.push(model)
+                        invalidRecords.push(model)
                         break;
                     }
                 }
             }
 
             if (!isDuplicate) {
-                clearRecords.push(model)
+                cleanRecords.push(model)
             }
         }
 
-        if (clearRecords.length > 0) {
-            await this.#sendDataToKPA(site, clearRecords)
+        if (cleanRecords.length > 0) {
+            await this.#sendDataToKPA(site, cleanRecords)
         }
 
-        if (duplicateRecords.length > 0) {
-            await this.#sendDataToKPA(site, duplicateRecords)
+        if (invalidRecords.length > 0) {
+            await this.#sendDataToKPA(site, invalidRecords)
         }
 
         return true;

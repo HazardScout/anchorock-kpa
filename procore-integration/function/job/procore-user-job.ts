@@ -42,23 +42,13 @@ export class ProcoreUserJob implements IJob {
 
                     let kpaUsers : KPAUserModel[] = [];
                     for(let user of users) {
-                        if (user.employee_id == null || user.employee_id == '') {
-                            status.skippedRecord++
-                            continue;
-                        }
-
-                        if (user.email_address == null || user.email_address == '') {
-                            status.skippedRecord++
-                            continue;
-                        }
-
                         //Build KPA user Data and Check existing
                         var kpaUser : KPAUserModel | null = null;
                         for (let i = 0; i < kpaExistUsers.length; i++) {
                             const kpaExistUser = kpaExistUsers[i];
 
                             //Compare KPA Username with Procore user email
-                            if (kpaExistUser.username === user.email_address) {
+                            if (kpaExistUser.employeeNumber === user.employee_id) {
                                 kpaUser = kpaExistUser;
                                 kpaExistUsers.splice(i,1);
                                 break;
@@ -89,7 +79,7 @@ export class ProcoreUserJob implements IJob {
                         kpaUser.firstName = user.first_name
                         kpaUser.lastName = user.last_name;
                         kpaUser.email = user.email_address;
-                        kpaUser.username = user.email_address;
+                        kpaUser.username = user.employee_id;
                         kpaUser.initialPassword = `KPAFlex2024!!`;
                         kpaUser.role = this.config.defaultRole;
                         kpaUser.title = user.job_title;
