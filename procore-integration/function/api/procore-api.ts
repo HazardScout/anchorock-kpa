@@ -36,8 +36,8 @@ export class ProcoreAPI {
             const accessToken = data['access_token'];
             const refreshToken = data['refresh_token'];
             return new procoreContext(accessToken, refreshToken);
-        } catch(e) {
-            throw {'message':'Refresh Token Failed'};
+        } catch(e:any) {
+            throw new Error(JSON.stringify(e.response?.data || e));
         }
     }
 
@@ -50,14 +50,14 @@ export class ProcoreAPI {
                 let company = Object.assign(new ProcoreCompanyModel(), companyData);
                 result.push(company);
             }
-        } catch(e) {
+        } catch(e:any) {
             //For some reason, Cannot acess status on error Response
             const errorResponse = JSON.parse(JSON.stringify(e));
             if (errorResponse['status'] == 401) {
 
                 //Break Code - Temporary
                 if (this.auth.refreshToken === '1') {
-                    throw {'message':'Request Failed - Invalid token and refresh token'};
+                    throw new Error(JSON.stringify(e.response?.data || e));
                 }
 
                 this.auth = await this.refreshToken();
@@ -66,7 +66,7 @@ export class ProcoreAPI {
                 this.apiInstance.defaults.headers.common['Authorization'] = `Bearer ${this.auth.accessToken}`;
                 return await this.getCompanies()
             } else {
-                throw {'message':'Request Failed'};
+                throw new Error(JSON.stringify(e.response?.data || e));
             }
         }
         return result;
@@ -82,14 +82,14 @@ export class ProcoreAPI {
                 let project = Object.assign(new ProcoreCompanyModel(), projectData);
                 result.push(project);
             }
-        } catch(e) {
+        } catch(e:any) {
             //For some reason, Cannot acess status on error Response
             const errorResponse = JSON.parse(JSON.stringify(e));
             if (errorResponse['status'] == 401) {
 
                 //Break Code - Temporary
                 if (this.auth.refreshToken === '1') {
-                    throw {'message':'Request Failed - Invalid token and refresh token'};
+                    throw new Error(JSON.stringify(e.response?.data || e));
                 }
 
                 this.auth = await this.refreshToken();
@@ -98,7 +98,7 @@ export class ProcoreAPI {
                 this.apiInstance.defaults.headers.common['Authorization'] = `Bearer ${this.auth.accessToken}`;
                 return await this.getProjects(companyId)
             } else {
-                throw {'message':'Request Failed'};
+                throw new Error(JSON.stringify(e.response?.data || e));
             }
         }
         return result;
@@ -113,14 +113,14 @@ export class ProcoreAPI {
                 let user = Object.assign(new ProcoreUserModel(), userData);
                 result.push(user);
             }
-        } catch(e) {
+        } catch(e:any) {
             //For some reason, Cannot acess status on error Response
             const errorResponse = JSON.parse(JSON.stringify(e));
             if (errorResponse['status'] == 401) {
 
                 //Break Code - Temporary
                 if (this.auth.refreshToken === '1') {
-                    throw {'message':'Request Failed - Invalid token and refresh token'};
+                    throw new Error(JSON.stringify(e.response?.data || e));
                 }
 
                 this.auth = await this.refreshToken();;
@@ -129,7 +129,7 @@ export class ProcoreAPI {
                 this.apiInstance.defaults.headers.common['Authorization'] = `Bearer ${this.auth.accessToken}`;
                 return await this.getUsers(companyId)
             } else {
-                throw {'message':'Request Failed'};
+                throw new Error(JSON.stringify(e.response?.data || e));
             }
         }
         return result;

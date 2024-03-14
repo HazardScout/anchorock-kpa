@@ -8,8 +8,8 @@ export class JobStatus {
     upsertRecord:number;
     inactivatedRecord:number;
     skippedRecord:number;
-    error:Error|string;
-  
+    error:ErrorLike|string;
+
     constructor(jobName:string) {
       this.jobName = jobName;
       this.totalExistingRecord = 0;
@@ -27,8 +27,13 @@ export class JobStatus {
       if (this.stopped) {
         return;
       }
-  
+
       this.stopped = Date.now();
       this.duration = this.stopped - this.started;
     }
+}
+
+export type ErrorLike = {
+  message: string,
+  stack?: string,
 }
