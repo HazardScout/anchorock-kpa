@@ -25,43 +25,50 @@ export class KPAProjectAPI {
 
     async saveProject(site: string, models: KPAProjectModel[]) : Promise<boolean> {
 
-        var clearRecords : KPAProjectModel[] = []
-        var duplicateRecords : KPAProjectModel[] = []
+        var cleanRecords : KPAProjectModel[] = []
+        var invalidRecords : KPAProjectModel[] = []
 
         for (var model of models) {
+
+            //Ignore Project without job number
+            if (model.code === null || model.code === '') {
+                invalidRecords.push(model)
+                continue
+            }
+
             var isDuplicate = false;
-            for (let i = 0; i < clearRecords.length; i++) {
-                var clearRecord : KPAProjectModel = clearRecords[i];
+            for (let i = 0; i < cleanRecords.length; i++) {
+                var clearRecord : KPAProjectModel = cleanRecords[i];
                 if (clearRecord.code === model.code) {
                     isDuplicate = true;
-                    duplicateRecords.push(model)
-                    duplicateRecords.push(clearRecord)
-                    clearRecords.splice(i, 1);
+                    invalidRecords.push(model)
+                    invalidRecords.push(clearRecord)
+                    cleanRecords.splice(i, 1);
                     break;
                 }
             }
 
             if (!isDuplicate) {
-                for (var duplicateRecord of duplicateRecords) {
-                    if (duplicateRecord.code === model.code) {
+                for (var invalidRecord of invalidRecords) {
+                    if (invalidRecord.code === model.code) {
                         isDuplicate = true;
-                        duplicateRecords.push(model)
+                        invalidRecords.push(model)
                         break;
                     }
                 }
             }
 
             if (!isDuplicate) {
-                clearRecords.push(model)
+                cleanRecords.push(model)
             }
         }
 
-        if (clearRecords.length > 0) {
-            await this.#sendDataToKPA(site, clearRecords)
+        if (cleanRecords.length > 0) {
+            await this.#sendDataToKPA(site, cleanRecords)
         }
 
-        if (duplicateRecords.length > 0) {
-            await this.#sendDataToKPA(site, duplicateRecords)
+        if (invalidRecords.length > 0) {
+            await this.#sendDataToKPA(site, invalidRecords)
         }
 
         return true;        
