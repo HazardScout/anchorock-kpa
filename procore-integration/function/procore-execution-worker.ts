@@ -34,9 +34,11 @@ const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
         try {
           jobStatus.start()
           await userJob.execute(jobStatus);
-        } catch (e) {
-            jobStatus.error = String(e)
-            throw e;
+        } catch (e:any) {
+            jobStatus.error = {
+              message: String(e),
+              stack: e.stack,
+            };
         } finally {
             jobStatus.done()
         }
@@ -50,9 +52,11 @@ const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
         try {
           jobStatus.start()
           await projectJob.execute(jobStatus);
-        } catch (e) {
-            jobStatus.error = String(e)
-            throw e;
+        } catch (e:any) {
+            jobStatus.error = {
+              message: String(e),
+              stack: e.stack,
+            };
         } finally {
             jobStatus.done()
         }
@@ -60,9 +64,10 @@ const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
     }
 
 
-  } catch(e) {
+  } catch(e:any) {
     workerStatus.error = String(e);
-    logger(`Worker Stop with Error : ${e}`)
+    logger(`Worker Stop with Unexpected Error : ${String(e)}`);
+    console.error('Worker Stop with Unexpected Error', e);
   } finally {
     workerStatus.done()
   }

@@ -18,6 +18,9 @@ export const extractionLambdaHandler : Handler = async (event: any, context: Con
     });
 
     for(var config of configs) {
+        if (!config.active) {
+            continue;
+        }
         console.log(`Execute Procore Customer: ${config.kpaSite}} Start`);
 
         const sqsUserPayload : SQS.SendMessageRequest= {

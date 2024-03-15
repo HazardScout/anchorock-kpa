@@ -3,7 +3,7 @@ import { executionKPAHandler } from './procore-execution-worker';
 export const exec = async (
   data:Record<string, any>,
   logToJob:(...data:any[]) => void,
-  callback: (error?:any) => void
+  callback: (error?:any, results?:any) => void
 ) => {
   if (!data.apiToken) {
     return callback(new Error('apiToken is required!'));
@@ -27,11 +27,9 @@ export const exec = async (
       logger: logToJob,
     });
 
-    logToJob(JSON.stringify({
-      status: body,
-    }));
+    logToJob(JSON.stringify(body));
 
-    callback();
+    callback(null, body);
   } catch (error) {
     callback(error);
   }
