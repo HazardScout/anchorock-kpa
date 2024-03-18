@@ -63,9 +63,6 @@ export class ProcoreProjectJob implements IJob  {
 
                         kpaProject.name = project.name;
                         kpaProject.code = project.project_number;
-                        if (!kpaProject.code || kpaProject.code === '') {
-                            kpaProject.code = project.name;
-                        }
                         kpaProject.isActive = project.active
                         kpaProject.address = project.address;
                         kpaProject.city = project.city;
