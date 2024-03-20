@@ -31,7 +31,7 @@ export class ProcoreAPI {
 
     async refreshToken(): Promise<procoreContext> {
         try {
-            const { data } = await this.authInstance.post('', {grant_type: 'refresh_token', refresh_token: this.auth.refreshToken});
+            const { data } = await this.authInstance.post('', {grant_type: 'refresh_token', refresh_token: this.auth.refreshToken, client_id: this.auth.clientId, client_scrent: this.auth.clientSecret});
 
             const accessToken = data['access_token'];
             const refreshToken = data['refresh_token'];
@@ -55,11 +55,6 @@ export class ProcoreAPI {
             const errorResponse = JSON.parse(JSON.stringify(e));
             if (errorResponse['status'] == 401) {
 
-                //Break Code - Temporary
-                if (this.auth.refreshToken === '1') {
-                    throw new Error(JSON.stringify(e.response?.data || e));
-                }
-
                 this.auth = await this.refreshToken();
                 await this.resaveToken(this.auth)
 
@@ -77,20 +72,15 @@ export class ProcoreAPI {
         const result: ProcoreProjectModel[] = [];
         try {
             const { data } = await this.apiInstance
-            .get('/projects', { params: { company_id: companyId } , headers: { 'Procore-Company-Id': `${companyId}`}})
+            .get('/projects', { params: { company_id: companyId, 'filters[by_status]': 'All' } , headers: { 'Procore-Company-Id': `${companyId}`}})
             for (var projectData of data) {
-                let project = Object.assign(new ProcoreCompanyModel(), projectData);
+                let project = Object.assign(new ProcoreProjectModel(), projectData);
                 result.push(project);
             }
         } catch(e:any) {
             //For some reason, Cannot acess status on error Response
             const errorResponse = JSON.parse(JSON.stringify(e));
             if (errorResponse['status'] == 401) {
-
-                //Break Code - Temporary
-                if (this.auth.refreshToken === '1') {
-                    throw new Error(JSON.stringify(e.response?.data || e));
-                }
 
                 this.auth = await this.refreshToken();
                 await this.resaveToken(this.auth)
@@ -117,11 +107,6 @@ export class ProcoreAPI {
             //For some reason, Cannot acess status on error Response
             const errorResponse = JSON.parse(JSON.stringify(e));
             if (errorResponse['status'] == 401) {
-
-                //Break Code - Temporary
-                if (this.auth.refreshToken === '1') {
-                    throw new Error(JSON.stringify(e.response?.data || e));
-                }
 
                 this.auth = await this.refreshToken();;
                 await this.resaveToken(this.auth)
