@@ -1,7 +1,7 @@
 import axios, { Axios } from "axios";
 import { KPAProjectModel } from "../model";
 import { Helper } from "../utilities";
-import { clear } from "console";
+import { debuglog } from 'util';
 
 export class KPAProjectAPI {
     token: string;
@@ -15,7 +15,7 @@ export class KPAProjectAPI {
     async getAllProject():Promise<KPAProjectModel[]> {
         let result : KPAProjectModel[] = [];
         const { data } = await this.apiInstance.post('projects.list', {token:this.token});
-        console.log(data)
+        debuglog('log:base:projects')(data)
         for (var projectData of data) {
             let project = Object.assign(new KPAProjectModel(), projectData);
             result.push(project);
@@ -71,7 +71,7 @@ export class KPAProjectAPI {
             await this.#sendDataToKPA(site, invalidRecords)
         }
 
-        return true;        
+        return true;
     }
 
     async #sendDataToKPA(site: string, models: KPAProjectModel[]) : Promise<boolean> {
@@ -88,7 +88,7 @@ export class KPAProjectAPI {
             content = `${content},${Helper.csvContentChecker(model.city)}`
             content = `${content},${Helper.csvContentChecker(model.state)}`
             content = `${content},${Helper.csvContentChecker(model.zip)}`
-            
+
         }
 
         const fileData = Buffer.from(content, 'binary').toString('base64');
@@ -96,11 +96,12 @@ export class KPAProjectAPI {
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
+            name: 'procore.projects',
             failureEmails: [],
             successEmails: []
         });
 
-        console.log(data)
+        debuglog('log:worker:dataload-response')('procore.employees', data)
 
         return data.ok;
     }

@@ -1,7 +1,7 @@
 import axios, { Axios } from "axios";
 import { KPAUserModel } from "../model";
 import { Helper } from "../utilities";
-import { clear } from "console";
+import { debuglog } from 'util';
 
 export class KPAUserAPI {
     token: string;
@@ -84,7 +84,7 @@ export class KPAUserAPI {
         var content = `${headers}`;
 
         for(var model of models) {
-            
+
             var dataUser = `${site},Employee`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.employeeNumber)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.firstName)}`
@@ -106,15 +106,16 @@ export class KPAUserAPI {
         }
 
         const fileData = Buffer.from(content, 'binary').toString('base64');
-        
+
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
+            name: 'procore.employees',
             failureEmails: [],
             successEmails: []
         });
 
-        console.log(data)
+        debuglog('log:worker:dataload-response')('procore.employees', data)
 
         return data.ok;
     }

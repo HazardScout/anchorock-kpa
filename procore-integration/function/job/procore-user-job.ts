@@ -5,6 +5,7 @@ import { ProcoreAPI } from "../api";
 import { KPAProcoreConfigurationModel, procoreContext } from "../model";
 import { KPAProcoreConfigurationDB } from "../mongodb";
 import { JobStatus } from "../../../base-integration/src/job";
+import { debuglog } from 'util';
 
 export class ProcoreUserJob implements IJob {
     name: string;
@@ -20,7 +21,7 @@ export class ProcoreUserJob implements IJob {
         let kpaUserAPI = new KPAUserAPI(this.config.kpaToken);
         let kpaExistUsers = await kpaUserAPI.getAllUser();
         status.totalExistingRecord = kpaExistUsers.length;
-        console.log(kpaExistUsers)
+        debuglog('log:job:user')(kpaExistUsers.toString());
 
         //Fetch Procore Company
         let auth = new procoreContext(this.config.procoreToken, this.config.procoreRefreshToken);
@@ -56,6 +57,7 @@ export class ProcoreUserJob implements IJob {
                         }
 
                         //Build KPA user Data and Check existing
+                        // todo: discuss pulling in-active users
                         if (kpaUser == null) {
                             kpaUser = new KPAUserModel();
                             if (!user.is_active) {
@@ -98,7 +100,7 @@ export class ProcoreUserJob implements IJob {
                     // console.log(kpaUsers)
                     const success = await kpaUserAPI.saveUser(this.config.kpaSite, kpaUsers, this.config.isEditUser)
                     if (!success) {
-                        console.log('Failed to save Users')
+                        throw new Error('Failed to save Users:' + this.config.kpaSite);
                     }
                 }
             }
