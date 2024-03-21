@@ -31,7 +31,12 @@ export class ProcoreAPI {
 
     async refreshToken(): Promise<procoreContext> {
         try {
-            const { data } = await this.authInstance.post('', {grant_type: 'refresh_token', refresh_token: this.auth.refreshToken, client_id: this.auth.clientId, client_scrent: this.auth.clientSecret});
+            const { data } = await this.authInstance.post('', {
+                grant_type: 'refresh_token', 
+                refresh_token: this.auth.refreshToken, 
+                client_id: this.auth.clientId, 
+                client_secret: this.auth.clientSecret
+            });
 
             const accessToken = data['access_token'];
             const refreshToken = data['refresh_token'];
