@@ -22,7 +22,7 @@ export class KPAUserAPI {
         return result;
     }
 
-    async saveUser(site: string, models: KPAUserModel[]) : Promise<boolean> {
+    async saveUser(site: string, models: KPAUserModel[], isEditUSer: boolean) : Promise<boolean> {
         var cleanRecords : KPAUserModel[] = []
         var invalidRecords : KPAUserModel[] = []
 
@@ -62,19 +62,25 @@ export class KPAUserAPI {
         }
 
         if (cleanRecords.length > 0) {
-            await this.#sendDataToKPA(site, cleanRecords)
+            await this.#sendDataToKPA(site, cleanRecords, isEditUSer)
         }
 
         if (invalidRecords.length > 0) {
-            await this.#sendDataToKPA(site, invalidRecords)
+            await this.#sendDataToKPA(site, invalidRecords, isEditUSer)
         }
 
         return true;
     }
 
-    async #sendDataToKPA(site: string, models: KPAUserModel[]) : Promise<boolean> {
+    async #sendDataToKPA(site: string, models: KPAUserModel[], isEditUSer: boolean) : Promise<boolean> {
 
-        let headers = 'Site,RecordType,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail';
+        let headers = '';
+        if (isEditUSer) {
+            headers = 'Site,RecordType,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail,UpdatePolicy';
+        } else {
+            headers = 'Site,RecordType,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail';
+        }
+
         var content = `${headers}`;
 
         for(var model of models) {
@@ -91,6 +97,10 @@ export class KPAUserAPI {
             dataUser = `${dataUser},${Helper.csvContentChecker(model.terminationDate ?? '')}`
             dataUser = `${dataUser},${model.resetPassword ? 'Y': 'N'}`
             dataUser = `${dataUser},${model.welcomeEmail ? 'Y': 'N'}`
+
+            if (isEditUSer) {
+                dataUser = `${dataUser},Always`
+            }
 
             content = `${content}\n${dataUser}`
         }
