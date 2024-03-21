@@ -6,5 +6,5 @@ export declare class KPAUserAPI {
     apiInstance: Axios;
     constructor(token: string);
     getAllUser(): Promise<KPAUserModel[]>;
-    saveUser(site: string, models: KPAUserModel[]): Promise<boolean>;
+    saveUser(site: string, models: KPAUserModel[], isEditUSer: boolean): Promise<boolean>;
 }

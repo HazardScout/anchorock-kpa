@@ -98,7 +98,7 @@ export class RivetUserJob implements IJob {
             //Send Data
             // console.log(kpaUsers)
             console.log(kpaUsers.length)
-            const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers)
+            const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers, this.isEditUser)
             if (!success) {
                 console.log('Failed to save Users')
             }

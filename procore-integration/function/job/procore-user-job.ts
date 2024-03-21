@@ -21,7 +21,7 @@ export class ProcoreUserJob implements IJob {
         let kpaUserAPI = new KPAUserAPI(this.config.kpaToken);
         let kpaExistUsers = await kpaUserAPI.getAllUser();
         status.totalExistingRecord = kpaExistUsers.length;
-        debuglog('log:job:user')(kpaExistUsers);
+        debuglog('log:job:user')(kpaExistUsers.toString());
 
         //Fetch Procore Company
         let auth = new procoreContext(this.config.procoreToken, this.config.procoreRefreshToken);
