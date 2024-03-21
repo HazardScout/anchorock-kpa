@@ -12,7 +12,7 @@ export class ProcoreUserJob implements IJob {
     config: KPAProcoreConfigurationModel;
 
     constructor(config: KPAProcoreConfigurationModel) {
-        this.name = "Procore User Job";
+        this.name = "Procore User Job - " + config.kpaSite;
         this.config = config;
     }
 
