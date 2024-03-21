@@ -7,9 +7,9 @@ import { ProcoreProjectJob, ProcoreUserJob } from "./job";
 
 const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
   const logger = kpaOptions?.logger || console.log;
-  debuglog('env')('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
-  logger('## EVENT: ' + serialize(event))
-  logger('## CONTEXT: ' + serialize(context || kpaOptions))
+  debuglog('log:worker:env')('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
+  debuglog('log:worker')('## EVENT: ' + serialize(event))
+  debuglog('log:worker')('## CONTEXT: ' + serialize(context || kpaOptions))
 
   logger("Execute Procore Execution Start");
   let workerStatus = new WorkerStatus('Procore Execution Handler');
