@@ -7,8 +7,9 @@ export class SpectrumUserJob implements IJob {
     name: string;
     kpaSite: string;
     kpaToken: string;
-    clientId: string;
-    clientSecret: string;
+    serverUrl: string;
+    companyCode: string;
+    authorizationId: string;
     isEditUser: boolean;
     config: any;
     defaultRole: string;
@@ -21,8 +22,9 @@ export class SpectrumUserJob implements IJob {
 
         this.kpaSite = config["kpaSite"]["stringValue"];
         this.kpaToken = config["kpaToken"]["stringValue"];
-        this.clientId = config["clientId"]["stringValue"];
-        this.clientSecret = config["clientSecret"]["stringValue"];
+        this.serverUrl = config["serverUrl"]["stringValue"];
+        this.companyCode = config["companyCode"]["stringValue"];
+        this.authorizationId = config["authorizationId"]["stringValue"];
         this.isEditUser = config["isEditUser"]["stringValue"] == '1';
         this.defaultRole = config["defaultRole"]["stringValue"];
         this.welcomeEmail = config["welcomeEmail"]["stringValue"] === '1';
@@ -39,7 +41,7 @@ export class SpectrumUserJob implements IJob {
             console.log(kpaExistUsers)
 
             //Fetch Spectrum Users
-            let spectrumAPI = new SpectrumAPI(this.clientId, this.clientSecret);
+            let spectrumAPI = new SpectrumAPI(this.serverUrl, this.authorizationId, this.companyCode);
             let users = await spectrumAPI.getUsers();
             status.totalSourceRecord = users.length
 
@@ -88,7 +90,7 @@ export class SpectrumUserJob implements IJob {
                 kpaUser.welcomeEmail = this.welcomeEmail
                 kpaUser.resetPassword = this.resetPassword
 
-                if (user.employeeStatus !== 'A') {
+                if (user.employeeStatus !== 'A' && kpaUser.terminationDate == null) {
                     kpaUser.terminationDate = new Date().toDateString();
                     console.log(`Need to Check ${kpaUser.terminationDate}`)
                 }

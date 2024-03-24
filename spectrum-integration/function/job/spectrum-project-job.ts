@@ -7,8 +7,9 @@ export class SpectrumProjectJob implements IJob {
     name: string;
     kpaSite: string;
     kpaToken: string;
-    clientId: string;
-    clientSecret: string;
+    serverUrl: string;
+    companyCode: string;
+    authorizationId: string;
     isEditProject: boolean;
     config: any;
 
@@ -18,8 +19,9 @@ export class SpectrumProjectJob implements IJob {
 
         this.kpaSite = config["kpaSite"]["stringValue"];
         this.kpaToken = config["kpaToken"]["stringValue"];
-        this.clientId = config["clientId"]["stringValue"];
-        this.clientSecret = config["clientSecret"]["stringValue"];
+        this.serverUrl = config["serverUrl"]["stringValue"];
+        this.companyCode = config["companyCode"]["stringValue"];
+        this.authorizationId = config["authorizationId"]["stringValue"];
         this.isEditProject = config["isEditProject"]["stringValue"] == '1';
     }
 
@@ -33,23 +35,18 @@ export class SpectrumProjectJob implements IJob {
             status.totalExistingRecord = kpaExistProjects.length
 
             //Fetch Spectrum Projects
-            let spectrumAPI = new SpectrumAPI(this.clientId, this.clientSecret)
+            let spectrumAPI = new SpectrumAPI(this.serverUrl, this.authorizationId, this.companyCode)
             let projects = await spectrumAPI.getProjects();
             status.totalSourceRecord = projects.length
 
             //Loop Spectrum Projects
             let kpaProjects: KPAProjectModel[] = [];
             for(let project of projects) {
-                //Ignore Project without job number
-                if (project.jobNumber === null || project.jobNumber === '') {
-                    status.skippedRecord++
-                    continue
-                }
 
                 var kpaProject : KPAProjectModel | null = null;
                 for (let i = 0; i < kpaExistProjects.length; i++) {
                     const kpaExistProject = kpaExistProjects[i];
-                    if (kpaExistProject.name === project.jobDescription && kpaExistProject.code === project.jobNumber) {
+                    if (kpaExistProject.code === project.jobNumber) {
                         kpaProject = kpaExistProject;
                         kpaExistProjects.splice(i,1);
                         break;
@@ -69,7 +66,7 @@ export class SpectrumProjectJob implements IJob {
                 //Build KPA project Data and Check existing
                 kpaProject.name = project.jobDescription;
                 kpaProject.code = project.jobNumber;
-                kpaProject.isActive = project.statusCode === "Active"
+                kpaProject.isActive = project.statusCode === "A"
                 kpaProject.address = project.address;
                 kpaProject.city = project.city;
                 kpaProject.state = project.state;

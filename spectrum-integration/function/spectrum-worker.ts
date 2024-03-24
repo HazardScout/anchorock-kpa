@@ -21,7 +21,7 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
         if (!config.active) {
             continue;
         }
-        console.log(`Execute Spectrum Customer: ${config.kpaSite} ${config.clientId} ${config.clientSecret} Start`);
+        console.log(`Execute Spectrum Customer: ${config.kpaSite} ${config.companyCode} Start`);
 
         if (config.isSyncUser) {
             const sqsUserPayload : SQS.SendMessageRequest= {
@@ -29,12 +29,16 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                 MessageBody: `User Integration - ${config.kpaSite}`,
                 QueueUrl: process.env.AWS_SQS_SPECTRUM_USER_URL ?? '',
                 MessageAttributes: {
-                    'clientId': {
-                        StringValue: config.clientId,
+                    'serverUrl': {
+                        StringValue: config.serverUrl,
                         DataType: 'String'
                     },
-                    'clientSecret': {
-                        StringValue: config.clientSecret,
+                    'companyCode': {
+                        StringValue: config.companyCode,
+                        DataType: 'String'
+                    },
+                    'authorizationId': {
+                        StringValue: config.authorizationId,
                         DataType: 'String'
                     },
                     'isEditUser': {
@@ -82,12 +86,16 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                 MessageBody: `Project Integration - ${config.kpaSite}`,
                 QueueUrl: process.env.AWS_SQS_SPECTRUM_PROJECT_URL ?? '',
                 MessageAttributes: {
-                    'clientId': {
-                        StringValue: config.clientId,
+                    'serverUrl': {
+                        StringValue: config.serverUrl,
                         DataType: 'String'
                     },
-                    'clientSecret': {
-                        StringValue: config.clientSecret,
+                    'companyCode': {
+                        StringValue: config.companyCode,
+                        DataType: 'String'
+                    },
+                    'authorizationId': {
+                        StringValue: config.authorizationId,
                         DataType: 'String'
                     },
                     'isEditProject': {
