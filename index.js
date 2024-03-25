@@ -6,7 +6,7 @@ const procoreModel = require('./dist/procore-integration/function/model/index');
 const rivetModelDb = require('./dist/rivet-integration/function/mongodb/index');
 const rivetModel = require('./dist/rivet-integration/function/model/index');
 
-// const spectrumIntegration = require('./dist/spectrum-integration/function/spectrum-execution-worker-kpa-wrapper');
+const spectrumIntegration = require('./dist/spectrum-integration/function/spectrum-execution-worker-kpa-wrapper');
 const spectrumModelDb = require('./dist/spectrum-integration/function/mongodb/index');
 const spectrumModel = require('./dist/spectrum-integration/function/model/index');
 
@@ -22,7 +22,7 @@ module.exports = {
     model: rivetModel,
   },
   spectrum: {
-    // worker: spectrumIntegration,
+    worker: spectrumIntegration,
     db: spectrumModelDb,
     model: spectrumModel,
   },

@@ -1,7 +1,4 @@
 import { Handler } from "aws-lambda";
+import { KPAHandler } from "../../base-integration/src/worker";
 export declare const executionLambdaHandler: Handler;
 export declare const executionKPAHandler: KPAHandler;
-export type KPAOptions = {
-    logger?: (...data: any[]) => void;
-};
-export type KPAHandler = (event: any, kpaOptions: KPAOptions) => any;

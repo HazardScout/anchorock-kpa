@@ -1,15 +1,18 @@
 import { Context, Handler } from "aws-lambda";
 import { SpectrumProjectJob } from "./job";
 import { JobStatus } from "../../base-integration/src/job";
-import { WorkerStatus } from "../../base-integration/src/worker";
+import { KPAHandler, KPAOptions, WorkerStatus } from "../../base-integration/src/worker";
+import { KPASpectrumConfigurationDB } from "./mongodb";
+import { debuglog } from 'util';
 
 // Handler
-export const spectrumProjectLambdaHandler : Handler = async (event: any, context: Context) => {
-  console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
-  console.log('## EVENT: ' + serialize(event))
-  console.log('## CONTEXT: ' + serialize(context))
+const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
+  const logger = kpaOptions?.logger || console.log;
+  debuglog('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
+  debuglog('## EVENT: ' + serialize(event))
+  debuglog('## CONTEXT: ' + serialize(context))
   
-  console.log("Execute Spectrum Project Start");
+  logger("Execute Spectrum Project Start");
   let workerStatus = new WorkerStatus('Spectrum Project Handler');
   
   try {
@@ -33,12 +36,12 @@ export const spectrumProjectLambdaHandler : Handler = async (event: any, context
     
   } catch(e) {
     workerStatus.error = String(e);
-    console.log(`Worker Stop with Error : ${e}`)
+    logger(`Worker Stop with Unexpected Error : ${e}`);
   } finally {
     workerStatus.done()
   }
   
-  console.log("Execute Spectrum Project Done");
+  logger("Execute Spectrum Project Done");
   
   const response = {
     "statusCode": 200,
@@ -51,4 +54,47 @@ export const spectrumProjectLambdaHandler : Handler = async (event: any, context
 
 var serialize = function(object: any) {
   return JSON.stringify(object, null, 2)
+}
+
+export const spectrumProjectLambdaHandler : Handler = async (event: any, context: Context) => {
+  return exec(event, context);
+}
+
+export const spectrumProjectSyncKPAHandler : KPAHandler = async (event: any, kpaOptions: KPAOptions) => {
+
+  const record = event.Records[0];
+  const messageAttributes = record.messageAttributes;
+  let kpaToken = messageAttributes['kpaToken']['stringValue'];
+
+  const configDB = new KPASpectrumConfigurationDB();
+  let config = await configDB.getConfigurationByKpaToken(kpaToken);
+
+  const lambdaRecordProxy = {
+    Records: [
+      {
+        messageAttributes: {
+          serverUrl: {
+            stringValue: config?.serverUrl
+          },
+          companyCode: {
+            stringValue: config?.companyCode
+          },
+          authorizationId: {
+            stringValue: config?.authorizationId
+          },
+          isEditProject: {
+            stringValue: config?.isEditProject ? '1' : '0',
+          },
+          kpaSite: {
+            stringValue: config?.kpaSite
+          },
+          kpaToken: {
+            stringValue: config?.kpaToken
+          },
+        },
+      },
+    ],
+  };
+
+  return exec(lambdaRecordProxy, undefined, kpaOptions);
 }
