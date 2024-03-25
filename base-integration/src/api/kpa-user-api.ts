@@ -1,7 +1,7 @@
 import axios, { Axios } from "axios";
 import { KPAUserModel } from "../model";
 import { Helper } from "../utilities";
-import { clear } from "console";
+import { debuglog } from 'util';
 
 export class KPAUserAPI {
     token: string;
