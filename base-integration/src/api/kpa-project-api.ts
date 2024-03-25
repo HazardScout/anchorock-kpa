@@ -96,7 +96,7 @@ export class KPAProjectAPI {
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
-            name: 'procore.projects',
+            name: 'projects-sync',
             failureEmails: [],
             successEmails: []
         });
