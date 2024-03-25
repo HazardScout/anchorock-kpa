@@ -110,12 +110,15 @@ export class KPAUserAPI {
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
-            name: 'procore.employees',
+            name: 'procore: emploeyes.csv',
             failureEmails: [],
             successEmails: []
         });
 
         debuglog('log:worker:dataload-response')('procore.employees', data)
+        if (!data.ok) {
+            throw new Error(`${data.error}:${data.description}`);
+        }
 
         return data.ok;
     }
