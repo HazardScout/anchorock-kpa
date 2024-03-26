@@ -81,7 +81,7 @@ export class ProcoreUserJob implements IJob {
                         kpaUser.firstName = user.first_name
                         kpaUser.lastName = user.last_name;
                         kpaUser.email = user.email_address;
-                        kpaUser.username = user.employee_id;
+                        kpaUser.username = user.email_address;
                         kpaUser.initialPassword = `KPAFlex2024!!`;
                         kpaUser.role = this.config.defaultRole;
                         kpaUser.title = user.job_title;
