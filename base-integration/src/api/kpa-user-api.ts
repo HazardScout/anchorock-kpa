@@ -110,7 +110,7 @@ export class KPAUserAPI {
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
-            name: 'procore: emploeyes.csv',
+            name: 'employees.csv',
             failureEmails: [],
             successEmails: []
         });
