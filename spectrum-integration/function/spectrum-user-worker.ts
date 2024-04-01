@@ -73,10 +73,10 @@ export const spectrumUserSyncKPAHandler : KPAHandler = async (event: any, kpaOpt
       {
         messageAttributes: {
           serverUrl: {
-            stringValue: config?.serverUrl
+            stringValue: `${config?.spectrumUrl}:${config?.spectrumPort}`
           },
-          companyCode: {
-            stringValue: config?.companyCode
+          companyCodes: {
+            stringListValues: config?.companyCodes
           },
           authorizationId: {
             stringValue: config?.authorizationId

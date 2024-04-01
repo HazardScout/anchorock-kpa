@@ -21,7 +21,7 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
         if (!config.active) {
             continue;
         }
-        console.log(`Execute Spectrum Customer: ${config.kpaSite} ${config.companyCode} Start`);
+        console.log(`Execute Spectrum Customer: ${config.kpaSite} ${config.companyCodes} Start`);
 
         if (config.isSyncUser) {
             const sqsUserPayload : SQS.SendMessageRequest= {
@@ -30,11 +30,11 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                 QueueUrl: process.env.AWS_SQS_SPECTRUM_USER_URL ?? '',
                 MessageAttributes: {
                     'serverUrl': {
-                        StringValue: config.serverUrl,
+                        StringValue: `${config.spectrumUrl}:${config.spectrumPort}`,
                         DataType: 'String'
                     },
-                    'companyCode': {
-                        StringValue: config.companyCode,
+                    'companyCodes': {
+                        StringListValues: config.companyCodes,
                         DataType: 'String'
                     },
                     'authorizationId': {
@@ -87,11 +87,11 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                 QueueUrl: process.env.AWS_SQS_SPECTRUM_PROJECT_URL ?? '',
                 MessageAttributes: {
                     'serverUrl': {
-                        StringValue: config.serverUrl,
+                        StringValue: `${config.spectrumUrl}:${config.spectrumPort}`,
                         DataType: 'String'
                     },
-                    'companyCode': {
-                        StringValue: config.companyCode,
+                    'companyCodes': {
+                        StringListValues: config.companyCodes,
                         DataType: 'String'
                     },
                     'authorizationId': {
