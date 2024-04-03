@@ -91,14 +91,14 @@ export class KPAUserAPI {
         var content = `${headers}`;
 
         for(var jobTitle of jobTitles) {
-            
+
             var dataUser = `${site},JobTitle`
             dataUser = `${dataUser},${Helper.csvContentChecker(jobTitle)}`
             content = `${content}\n${dataUser}`
         }
 
         for(var model of models) {
-            
+
             var dataUser = `${site},Employee,`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.employeeNumber)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.firstName)}`
@@ -120,7 +120,7 @@ export class KPAUserAPI {
         }
 
         const fileData = Buffer.from(content, 'binary').toString('base64');
-        
+
         const { data } = await this.apiInstance.post('dataload.create', {
             token:this.token,
             file: `data:text/csv;base64,${fileData}`,
@@ -129,7 +129,7 @@ export class KPAUserAPI {
             successEmails: []
         });
 
-        debuglog('log:worker:dataload-response')('procore.employees', data)
+        debuglog('log:worker:dataload-response')('employees', data)
         if (!data.ok) {
             throw new Error(`${data.error}:${data.description}`);
         }
