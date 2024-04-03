@@ -101,7 +101,7 @@ export class KPAProjectAPI {
             successEmails: []
         });
 
-        debuglog('log:worker:dataload-response')('procore.employees', data)
+        debuglog('log:worker:dataload-response')('employees', data)
         if (!data.ok) {
             throw new Error(`${data.error}:${data.description}`);
         }

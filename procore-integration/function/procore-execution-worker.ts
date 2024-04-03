@@ -1,7 +1,7 @@
 import { Context, Handler } from "aws-lambda";
 import { debuglog } from 'util';
 import { JobStatus } from "../../base-integration/src/job";
-import { WorkerStatus } from "../../base-integration/src/worker";
+import { KPAHandler, KPAOptions, WorkerStatus } from "../../base-integration/src/worker";
 import { KPAProcoreConfigurationDB } from "./mongodb";
 import { ProcoreProjectJob, ProcoreUserJob } from "./job";
 
@@ -94,9 +94,3 @@ export const executionKPAHandler : KPAHandler = async (event: any, kpaOptions: K
 const serialize = function(object: any) {
   return JSON.stringify(object, null, 2)
 }
-
-export type KPAOptions = {
-  logger?: (...data:any[]) => void,
-}
-
-export type KPAHandler = (event: any, kpaOptions:KPAOptions) => any;

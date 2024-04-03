@@ -76,16 +76,30 @@ export class KPAUserAPI {
 
         let headers = '';
         if (isEditUSer) {
-            headers = 'Site,RecordType,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail,UpdatePolicy';
+            headers = 'Site,RecordType,Name,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail,UpdatePolicy';
         } else {
-            headers = 'Site,RecordType,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail';
+            headers = 'Site,RecordType,Name,EmployeeNumber,FirstName,LastName,Username,InitialPassword,Role,Title,Email,TerminationDate,ForcePasswordSelection,SendWelcomeEmail';
+        }
+
+        var jobTitles = [];
+        for(var model of models) {
+            if (model.title != null && model.title !== '' && jobTitles.indexOf(model.title) == -1) {
+                jobTitles.push(model.title);
+            }
         }
 
         var content = `${headers}`;
 
+        for(var jobTitle of jobTitles) {
+
+            var dataUser = `${site},JobTitle`
+            dataUser = `${dataUser},${Helper.csvContentChecker(jobTitle)}`
+            content = `${content}\n${dataUser}`
+        }
+
         for(var model of models) {
 
-            var dataUser = `${site},Employee`
+            var dataUser = `${site},Employee,`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.employeeNumber)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.firstName)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.lastName)}`
@@ -115,7 +129,7 @@ export class KPAUserAPI {
             successEmails: []
         });
 
-        debuglog('log:worker:dataload-response')('procore.employees', data)
+        debuglog('log:worker:dataload-response')('employees', data)
         if (!data.ok) {
             throw new Error(`${data.error}:${data.description}`);
         }

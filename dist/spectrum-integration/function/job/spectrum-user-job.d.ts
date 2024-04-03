@@ -3,8 +3,9 @@ export declare class SpectrumUserJob implements IJob {
     name: string;
     kpaSite: string;
     kpaToken: string;
-    clientId: string;
-    clientSecret: string;
+    serverUrl: string;
+    companyCodes: string[];
+    authorizationId: string;
     isEditUser: boolean;
     config: any;
     defaultRole: string;
