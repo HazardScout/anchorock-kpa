@@ -46,11 +46,6 @@ export class RivetProjectJob implements IJob {
                     continue
                 }
 
-                if (project.jobNumber === null || project.jobNumber === '') {
-                    status.skippedRecord++
-                    continue
-                }
-
                 var kpaProject : KPAProjectModel | null = null;
                 for (let i = 0; i < kpaExistProjects.length; i++) {
                     const kpaExistProject = kpaExistProjects[i];
