@@ -9,7 +9,7 @@ export const exec = async (
     if (!data.apiToken) {
       return callback(new Error('apiToken is required!'));
     }
-  
+
     const lambdaRecordProxy = {
       Records: [
         {
@@ -22,24 +22,24 @@ export const exec = async (
       ],
     };
     logToJob(`spectrum-wrapper: ${lambdaRecordProxy.Records[0].messageAttributes.kpaToken.stringValue.slice(-4)}`);
-  
+
     try {
-      const { userBody } = await spectrumUserSyncKPAHandler(lambdaRecordProxy, {
+      const { body: userBody } = await spectrumUserSyncKPAHandler(lambdaRecordProxy, {
         logger: logToJob,
       });
-  
+
       logToJob(JSON.stringify(userBody));
 
-      const { projectBody } = await spectrumProjectSyncKPAHandler(lambdaRecordProxy, {
+      const { body: projectBody } = await spectrumProjectSyncKPAHandler(lambdaRecordProxy, {
         logger: logToJob,
       });
-  
+
       logToJob(JSON.stringify(projectBody));
-  
-      callback(null, {userSync: userBody, projectSync: projectBody});
+
+      callback(null, [userBody, projectBody]);
     } catch (error) {
       callback(error);
     }
   };
-  
+
   export default exec;
