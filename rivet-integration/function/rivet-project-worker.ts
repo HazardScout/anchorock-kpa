@@ -1,15 +1,18 @@
 import { Context, Handler } from "aws-lambda";
 import { RivetProjectJob } from "./job";
 import { JobStatus } from "../../base-integration/src/job";
-import { WorkerStatus } from "../../base-integration/src/worker";
+import { KPAHandler, KPAOptions, WorkerStatus } from "../../base-integration/src/worker";
+import { KPARivetConfigurationDB } from "./mongodb";
+import { debuglog } from 'util';
 
 // Handler
-export const rivetProjectLambdaHandler : Handler = async (event: any, context: Context) => {
-  console.log('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
-  console.log('## EVENT: ' + serialize(event))
-  console.log('## CONTEXT: ' + serialize(context))
+const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
+  const logger = kpaOptions?.logger || console.log;
+  debuglog('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
+  debuglog('## EVENT: ' + serialize(event))
+  debuglog('## CONTEXT: ' + serialize(context))
   
-  console.log("Execute Rivet Project Start");
+  logger("Execute Rivet Project Start");
   let workerStatus = new WorkerStatus('Rivet Project Handler');
   
   try {
@@ -33,12 +36,12 @@ export const rivetProjectLambdaHandler : Handler = async (event: any, context: C
     
   } catch(e) {
     workerStatus.error = String(e);
-    console.log(`Worker Stop with Error : ${e}`)
+    logger(`Worker Stop with Unexpected Error : ${e}`);
   } finally {
     workerStatus.done()
   }
   
-  console.log("Execute Rivet Project Done");
+  logger("Execute Rivet Project Done");
   
   const response = {
     "statusCode": 200,
@@ -51,4 +54,44 @@ export const rivetProjectLambdaHandler : Handler = async (event: any, context: C
 
 var serialize = function(object: any) {
   return JSON.stringify(object, null, 2)
+}
+
+export const rivetProjectLambdaHandler : Handler = async (event: any, context: Context) => {
+  return exec(event, context);
+}
+
+export const rivetProjectSyncKPAHandler : KPAHandler = async (event: any, kpaOptions: KPAOptions) => {
+
+  const record = event.Records[0];
+  const messageAttributes = record.messageAttributes;
+  let kpaToken = messageAttributes['kpaToken']['stringValue'];
+
+  const configDB = new KPARivetConfigurationDB();
+  let config = await configDB.getConfigurationByKpaToken(kpaToken);
+
+  const lambdaRecordProxy = {
+    Records: [
+      {
+        messageAttributes: {
+          clientId: {
+            stringValue: config?.clientId
+          },
+          token: {
+            stringValue: config?.token
+          },
+          isEditProject: {
+            stringValue: config?.isEditProject ? '1' : '0',
+          },
+          kpaSite: {
+            stringValue: config?.kpaSite
+          },
+          kpaToken: {
+            stringValue: config?.kpaToken
+          },
+        },
+      },
+    ],
+  };
+
+  return exec(lambdaRecordProxy, undefined, kpaOptions);
 }
