@@ -11,10 +11,10 @@ const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
   debuglog('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
   debuglog('## EVENT: ' + serialize(event))
   debuglog('## CONTEXT: ' + serialize(context))
-  
+
   logger("Execute Spectrum Project Start");
   let workerStatus = new WorkerStatus('Spectrum Project Handler');
-  
+
   try {
     workerStatus.start()
 
@@ -27,28 +27,31 @@ const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
     try {
       jobStatus.start()
       await projectJob.execute(jobStatus);
-    } catch (e) {
-        jobStatus.error = String(e)
-        throw e;
+    } catch (e:any) {
+      jobStatus.error = {
+        message: String(e),
+        stack: e.stack,
+      };
+      throw e;
     } finally {
         jobStatus.done()
     }
-    
+
   } catch(e) {
     workerStatus.error = String(e);
     logger(`Worker Stop with Unexpected Error : ${e}`);
   } finally {
     workerStatus.done()
   }
-  
+
   logger("Execute Spectrum Project Done");
-  
+
   const response = {
     "statusCode": 200,
     "source": "Spectrum Project Integration",
     "body": workerStatus,
   }
-  
+
   return response
 }
 
