@@ -34,7 +34,7 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                         DataType: 'String'
                     },
                     'companyCodes': {
-                        StringListValues: config.companyCodes,
+                        StringValue: JSON.stringify(config.companyCodes),
                         DataType: 'String'
                     },
                     'authorizationId': {
@@ -91,7 +91,7 @@ export const workerLambdaHandler : Handler = async (event: any, context: Context
                         DataType: 'String'
                     },
                     'companyCodes': {
-                        StringListValues: config.companyCodes,
+                        StringValue: JSON.stringify(config.companyCodes),
                         DataType: 'String'
                     },
                     'authorizationId': {
