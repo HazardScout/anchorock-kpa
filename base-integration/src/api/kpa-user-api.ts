@@ -37,7 +37,7 @@ export class KPAUserAPI {
             var isDuplicate = false;
             for (let i = 0; i < cleanRecords.length; i++) {
                 var clearRecord : KPAUserModel = cleanRecords[i];
-                if (clearRecord.username === model.username || clearRecord.employeeNumber === model.employeeNumber) {
+                if (clearRecord.username === model.username || clearRecord.employeeNumber === model.employeeNumber || (clearRecord.email !== '' && clearRecord.email === model.email)) {
                     isDuplicate = true;
                     invalidRecords.push(model)
                     invalidRecords.push(clearRecord)
@@ -48,7 +48,7 @@ export class KPAUserAPI {
 
             if (!isDuplicate) {
                 for (var invalidRecord of invalidRecords) {
-                    if (invalidRecord.username === model.username || invalidRecord.employeeNumber === model.employeeNumber) {
+                    if (invalidRecord.username === model.username || invalidRecord.employeeNumber === model.employeeNumber || invalidRecord.email === model.email) {
                         isDuplicate = true;
                         invalidRecords.push(model)
                         break;

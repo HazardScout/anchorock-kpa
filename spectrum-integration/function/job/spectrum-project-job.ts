@@ -20,7 +20,7 @@ export class SpectrumProjectJob implements IJob {
         this.kpaSite = config["kpaSite"]["stringValue"];
         this.kpaToken = config["kpaToken"]["stringValue"];
         this.serverUrl = config["serverUrl"]["stringValue"];
-        this.companyCodes = config["companyCodes"]["stringListValues"];
+        this.companyCodes = JSON.parse(config["companyCodes"]["stringValue"]);
         this.authorizationId = config["authorizationId"]["stringValue"];
         this.isEditProject = config["isEditProject"]["stringValue"] == '1';
     }
