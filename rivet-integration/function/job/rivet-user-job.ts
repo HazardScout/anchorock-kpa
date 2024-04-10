@@ -83,7 +83,12 @@ export class RivetUserJob implements IJob {
                 kpaUser.employeeNumber = user.employeeId;
                 kpaUser.firstName = user.firstName
                 kpaUser.lastName = user.lastName;
-                kpaUser.username = user.employeeId;
+                kpaUser.username = user.email;
+
+                if (!kpaUser.username || kpaUser.username === '') {
+                    kpaUser.username = user.employeeId
+                }
+
                 kpaUser.email = user.email;
                 kpaUser.initialPassword = `KPAFlex2024!!`;
                 kpaUser.role = this.defaultRole;

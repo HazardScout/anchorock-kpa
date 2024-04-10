@@ -52,7 +52,8 @@ export class SpectrumUserJob implements IJob {
                     var kpaUser : KPAUserModel | null = null;
                     for (let i = 0; i < kpaExistUsers.length; i++) {
                         const kpaExistUser = kpaExistUsers[i];
-                        if (kpaExistUser.employeeNumber === user.employeeCode) {
+                        const employeeCode = `${companyCode}-${user.employeeCode}`;
+                        if (kpaExistUser.employeeNumber === employeeCode) {
                             kpaUser = kpaExistUser;
                             kpaExistUsers.splice(i,1);
                             break;
@@ -80,7 +81,7 @@ export class SpectrumUserJob implements IJob {
                     }
 
                     //Create Users 
-                    kpaUser.employeeNumber = user.employeeCode;
+                    kpaUser.employeeNumber = `${companyCode}-${user.employeeCode}`;
                     kpaUser.firstName = user.firstName
                     kpaUser.lastName = user.lastName;
                     kpaUser.username = user.employeeCode;
