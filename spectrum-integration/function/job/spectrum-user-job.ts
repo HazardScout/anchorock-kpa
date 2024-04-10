@@ -84,7 +84,7 @@ export class SpectrumUserJob implements IJob {
                     kpaUser.employeeNumber = `${companyCode}-${user.employeeCode}`;
                     kpaUser.firstName = user.firstName
                     kpaUser.lastName = user.lastName;
-                    kpaUser.username = user.employeeCode;
+                    kpaUser.username = `${companyCode}-${user.employeeCode}`;
                     kpaUser.email = '';
                     kpaUser.initialPassword = `KPAFlex2024!!`;
                     kpaUser.role = this.defaultRole;

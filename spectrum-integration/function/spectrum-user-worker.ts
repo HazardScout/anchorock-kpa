@@ -85,7 +85,7 @@ export const spectrumUserSyncKPAHandler : KPAHandler = async (event: any, kpaOpt
             stringValue: config?.authorizationId
           },
           isEditUser: {
-            stringValue: config?.isEditUser ? '1' : '0',
+            stringValue: !!config?.isEditUser,
           },
           kpaSite: {
             stringValue: config?.kpaSite
@@ -94,13 +94,13 @@ export const spectrumUserSyncKPAHandler : KPAHandler = async (event: any, kpaOpt
             stringValue: config?.kpaToken
           },
           defaultRole: {
-            stringValue: config?.defaultRole ? '1' : '0',
+            stringValue: config?.defaultRole,
           },
           welcomeEmail: {
-            stringValue: config?.isWelcomeEmail ? '1' : '0',
+            stringValue: !!config?.isWelcomeEmail,
           },
           resetPassword: {
-            stringValue: config?.isForceResetPassword ? '1' : '0',
+            stringValue: !!config?.isForceResetPassword,
           },
         },
       },
