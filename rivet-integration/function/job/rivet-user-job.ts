@@ -3,7 +3,7 @@ import { KPAUserAPI } from "../../../base-integration/src/api";
 import { JobStatus } from "../../../base-integration/src/job";
 import { IJob } from "../../../base-integration/src/job/job-interface";
 import { KPAUserModel } from "../../../base-integration/src/model";
-import { KPARivetConfigurationModel } from "../model";
+import { debuglog } from 'util';
 
 export class RivetUserJob implements IJob {
     name: string;
@@ -32,86 +32,77 @@ export class RivetUserJob implements IJob {
     }
 
     async execute(status:JobStatus): Promise<void> {
-        console.log("Execute RivetUserJob Start");
-        try {
+        debuglog('log:rivet:user')("Execute RivetUserJob Start");
+        let kpaUserAPI = new KPAUserAPI(this.kpaToken);
+        let kpaExistUsers = await kpaUserAPI.getAllUser();
+        status.totalExistingRecord = kpaExistUsers.length;
+        debuglog('log:rivet:user')(kpaExistUsers)
 
-            let kpaUserAPI = new KPAUserAPI(this.kpaToken);
-            let kpaExistUsers = await kpaUserAPI.getAllUser();
-            status.totalExistingRecord = kpaExistUsers.length;
-            console.log(kpaExistUsers)
+        let rivetAPI = new RivetAPI(this.clientId, this.token);
+        let users = await rivetAPI.getUsers();
+        status.totalSourceRecord = users.length
 
-            let rivetAPI = new RivetAPI(this.clientId, this.token);
-            let users = await rivetAPI.getUsers();
-            status.totalSourceRecord = users.length
-            
-            let kpaUsers : KPAUserModel[] = [];
-            for(let user of users) {
-                var kpaUser : KPAUserModel | null = null;
-                for (let i = 0; i < kpaExistUsers.length; i++) {
-                    const kpaExistUser = kpaExistUsers[i];
-                    if (kpaExistUser.employeeNumber === user.employeeId) {
-                        kpaUser = kpaExistUser;
-                        kpaExistUsers.splice(i,1);
-                        break;
-                    }
+        let kpaUsers : KPAUserModel[] = [];
+        for(let user of users) {
+            var kpaUser : KPAUserModel | null = null;
+            for (let i = 0; i < kpaExistUsers.length; i++) {
+                const kpaExistUser = kpaExistUsers[i];
+                if (kpaExistUser.employeeNumber === user.employeeId) {
+                    kpaUser = kpaExistUser;
+                    kpaExistUsers.splice(i,1);
+                    break;
                 }
+            }
 
-                //Build KPA user Data and Check existing
-                if (kpaUser == null) {
-                    kpaUser = new KPAUserModel();
-                    if (user.terminationDate !== null) {
-                        // console.log(`Skip User because of Termination Date ${user.employeeId} ${user.terminationDate}`)
-                        status.skippedRecord++
-                        continue;
-                    }
-                } else {
-                    if (!this.isEditUser) {
-                        // console.log(`Skip User because of Cannot Allow to edit ${user.employeeId}`)
-                        status.skippedRecord++
-                        continue;
-                    }
-                    if (user.terminationDate !== null) {
-                        status.inactivatedRecord++
-                    }
-                }
-
-                if (user.email === null || user.email === 'null') {
+            //Build KPA user Data and Check existing
+            if (kpaUser == null) {
+                kpaUser = new KPAUserModel();
+                if (user.terminationDate !== null) {
                     status.skippedRecord++
                     continue;
                 }
-
-                kpaUser.employeeNumber = user.employeeId;
-                kpaUser.firstName = user.firstName
-                kpaUser.lastName = user.lastName;
-                kpaUser.username = user.email;
-
-                if (!kpaUser.username || kpaUser.username === '') {
-                    kpaUser.username = user.employeeId
+            } else {
+                if (!this.isEditUser) {
+                    status.skippedRecord++
+                    continue;
                 }
-
-                kpaUser.email = user.email;
-                kpaUser.initialPassword = `KPAFlex2024!!`;
-                kpaUser.role = this.defaultRole;
-                kpaUser.terminationDate = user.terminationDate;
-                kpaUser.welcomeEmail = this.welcomeEmail
-                kpaUser.resetPassword = this.resetPassword
-
-                kpaUsers.push(kpaUser);
-                status.upsertRecord++;
+                if (user.terminationDate !== null) {
+                    status.inactivatedRecord++
+                }
             }
-            
-            //Send Data
-            // console.log(kpaUsers)
-            console.log(kpaUsers.length)
-            const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers, this.isEditUser)
-            if (!success) {
-                console.log('Failed to save Users')
+
+            if (user.email === null || user.email === 'null') {
+                status.skippedRecord++
+                continue;
             }
-        } catch (e) {
-            console.log(`Worker Stop with Error : ${e}`)
-            //Send an email to failed;
+
+            kpaUser.employeeNumber = user.employeeId;
+            kpaUser.firstName = user.firstName
+            kpaUser.lastName = user.lastName;
+            kpaUser.username = user.email;
+
+            if (!kpaUser.username || kpaUser.username === '') {
+                kpaUser.username = user.employeeId
+            }
+
+            kpaUser.email = user.email;
+            kpaUser.initialPassword = `KPAFlex2024!!`;
+            kpaUser.role = this.defaultRole;
+            kpaUser.terminationDate = user.terminationDate;
+            kpaUser.welcomeEmail = this.welcomeEmail
+            kpaUser.resetPassword = this.resetPassword
+
+            kpaUsers.push(kpaUser);
+            status.upsertRecord++;
         }
-        console.log("Execute RivetUserJob Done");
+
+        //Send Data
+        debuglog('log:rivet:user')(kpaUsers.length)
+        const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers, this.isEditUser);
+        if (!success) {
+            throw new Error('Failed to save User:' + this.config.kpaSite);
+        }
+        debuglog('log:rivet:user')("Execute RivetUserJob Done");
     }
 
 }

@@ -8,9 +8,9 @@ import { debuglog } from 'util';
 // Handler
 const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
   const logger = kpaOptions?.logger || console.log;
-  debuglog('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
-  debuglog('## EVENT: ' + serialize(event))
-  debuglog('## CONTEXT: ' + serialize(context))
+  debuglog('log:worker:rivet:user:env')('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
+  debuglog('log:worker:rivet:user')('## EVENT: ' + serialize(event))
+  debuglog('log:worker:rivet:user')('## CONTEXT: ' + serialize(context))
 
   logger("Execute Rivet User Start");
   let workerStatus = new WorkerStatus('Rivet User Handler');
