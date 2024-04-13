@@ -82,7 +82,7 @@ export const rivetUserSyncKPAHandler : KPAHandler = async (event: any, kpaOption
             stringValue: config?.token
           },
           isEditUser: {
-            stringValue: config?.isEditUser ? '1' : '0',
+            stringValue: !!config?.isEditUser,
           },
           kpaSite: {
             stringValue: config?.kpaSite
@@ -91,13 +91,13 @@ export const rivetUserSyncKPAHandler : KPAHandler = async (event: any, kpaOption
             stringValue: config?.kpaToken
           },
           defaultRole: {
-            stringValue: config?.defaultRole ? '1' : '0',
+            stringValue: config?.defaultRole,
           },
           welcomeEmail: {
-            stringValue: config?.isWelcomeEmail ? '1' : '0',
+            stringValue: !!config?.isWelcomeEmail,
           },
           resetPassword: {
-            stringValue: config?.isForceResetPassword ? '1' : '0',
+            stringValue: !!config?.isForceResetPassword,
           },
         },
       },
