@@ -80,7 +80,7 @@ export class SpectrumProjectJob implements IJob {
         }
 
         //Send Data
-        debuglog('log:spectrum:project')(kpaProjects.length)
+        debuglog('log:spectrum:project')(String(kpaProjects.length))
         const success = await kpaProjectAPI.saveProject(this.kpaSite, kpaProjects)
         if (!success) {
             throw new Error('Failed to save Projects:' + this.config.kpaSite);

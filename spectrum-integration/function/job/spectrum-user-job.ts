@@ -38,7 +38,7 @@ export class SpectrumUserJob implements IJob {
         let kpaUserAPI = new KPAUserAPI(this.kpaToken);
         let kpaExistUsers = await kpaUserAPI.getAllUser();
         status.totalExistingRecord = kpaExistUsers.length;
-        debuglog('log:spectrum:user')(kpaExistUsers)
+        debuglog('log:spectrum:user')(JSON.stringify(kpaExistUsers, null, 2));
 
         let kpaUsers : KPAUserModel[] = [];
         for (var companyCode of this.companyCodes) {
@@ -102,7 +102,7 @@ export class SpectrumUserJob implements IJob {
         }
 
         //Send Data
-        debuglog('log:spectrum:user')(kpaUsers.length)
+        debuglog('log:spectrum:user')(String(kpaUsers.length))
         const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers, this.isEditUser)
         if (!success) {
             throw new Error('Failed to save Users:' + this.config.kpaSite);

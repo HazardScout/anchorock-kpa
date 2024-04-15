@@ -36,7 +36,7 @@ export class RivetUserJob implements IJob {
         let kpaUserAPI = new KPAUserAPI(this.kpaToken);
         let kpaExistUsers = await kpaUserAPI.getAllUser();
         status.totalExistingRecord = kpaExistUsers.length;
-        debuglog('log:rivet:user')(kpaExistUsers)
+        debuglog('log:rivet:user')(JSON.stringify(kpaExistUsers, null, 2));
 
         let rivetAPI = new RivetAPI(this.clientId, this.token);
         let users = await rivetAPI.getUsers();
@@ -97,7 +97,7 @@ export class RivetUserJob implements IJob {
         }
 
         //Send Data
-        debuglog('log:rivet:user')(kpaUsers.length)
+        debuglog('log:rivet:user')(String(kpaUsers.length));
         const success = await kpaUserAPI.saveUser(this.kpaSite, kpaUsers, this.isEditUser);
         if (!success) {
             throw new Error('Failed to save User:' + this.config.kpaSite);

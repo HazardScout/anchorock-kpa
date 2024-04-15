@@ -30,7 +30,7 @@ export class RivetProjectJob implements IJob {
         // let kpaExistProjects = await kpaProjectAPI.getAllProject();
         let kpaExistProjects : KPAProjectModel[] = [];
         status.totalExistingRecord = kpaExistProjects.length
-        debuglog('log:rivet:project')(kpaExistProjects)
+        debuglog('log:rivet:project')(JSON.stringify(kpaExistProjects, null, 2));
 
         let rivetAPI = new RivetAPI(this.clientId, this.token);
         let projects = await rivetAPI.getProjects();
@@ -80,7 +80,7 @@ export class RivetProjectJob implements IJob {
         }
 
         //Send Data
-        debuglog('log:rivet:project')(kpaProjects.length)
+        debuglog('log:rivet:project')(String(kpaProjects.length))
         const success = await kpaProjectAPI.saveProject(this.kpaSite, kpaProjects);
         if (!success) {
             throw new Error('Failed to save Projects:' + this.config.kpaSite);
