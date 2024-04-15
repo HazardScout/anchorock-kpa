@@ -8,9 +8,9 @@ import { debuglog } from 'util';
 // Handler
 const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
   const logger = kpaOptions?.logger || console.log;
-  debuglog('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
-  debuglog('## EVENT: ' + serialize(event))
-  debuglog('## CONTEXT: ' + serialize(context))
+  debuglog('log:worker:rivet:user:env')('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
+  debuglog('log:worker:rivet:user')('## EVENT: ' + serialize(event))
+  debuglog('log:worker:rivet:user')('## CONTEXT: ' + serialize(context))
 
   logger("Execute Rivet User Start");
   let workerStatus = new WorkerStatus('Rivet User Handler');
@@ -82,7 +82,7 @@ export const rivetUserSyncKPAHandler : KPAHandler = async (event: any, kpaOption
             stringValue: config?.token
           },
           isEditUser: {
-            stringValue: config?.isEditUser ? '1' : '0',
+            stringValue: !!config?.isEditUser,
           },
           kpaSite: {
             stringValue: config?.kpaSite
@@ -91,13 +91,13 @@ export const rivetUserSyncKPAHandler : KPAHandler = async (event: any, kpaOption
             stringValue: config?.kpaToken
           },
           defaultRole: {
-            stringValue: config?.defaultRole ? '1' : '0',
+            stringValue: config?.defaultRole,
           },
           welcomeEmail: {
-            stringValue: config?.isWelcomeEmail ? '1' : '0',
+            stringValue: !!config?.isWelcomeEmail,
           },
           resetPassword: {
-            stringValue: config?.isForceResetPassword ? '1' : '0',
+            stringValue: !!config?.isForceResetPassword,
           },
         },
       },

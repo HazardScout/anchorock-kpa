@@ -8,9 +8,9 @@ import { debuglog } from 'util';
 // Handler
 const exec = async (event: any, context?: Context, kpaOptions?:KPAOptions) => {
   const logger = kpaOptions?.logger || console.log;
-  debuglog('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
-  debuglog('## EVENT: ' + serialize(event))
-  debuglog('## CONTEXT: ' + serialize(context))
+  debuglog('log:worker:spectrum:user:env')('## ENVIRONMENT VARIABLES: ' + serialize(process.env))
+  debuglog('log:worker:spectrum:user')('## EVENT: ' + serialize(event))
+  debuglog('log:worker:spectrum:user')('## CONTEXT: ' + serialize(context))
 
   logger("Execute Spectrum User Start");
   let workerStatus = new WorkerStatus('Spectrum User Handler');
