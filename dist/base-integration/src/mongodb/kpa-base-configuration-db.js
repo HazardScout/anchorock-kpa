@@ -21,7 +21,7 @@ class KPABaseConfigurationDB {
     async getConfigurationByKpaToken(kpaToken) {
         let result = [];
         const mongoClient = await mongodb_1.MongoClient.connect(this.mongoDbUrl);
-        const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`);
+        const mongoDb = mongoClient.db();
         let mongoDbCollection = mongoDb.collection(this.collectionName);
         const findResult = await mongoDbCollection.find({ kpa_token: kpaToken }).toArray();
         for (var data of findResult) {
@@ -35,7 +35,7 @@ class KPABaseConfigurationDB {
     }
     async save(model) {
         const mongoClient = await mongodb_1.MongoClient.connect(this.mongoDbUrl);
-        const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`);
+        const mongoDb = mongoClient.db();
         let mongoDbCollection = mongoDb.collection(this.collectionName);
         const doc = model === null || model === void 0 ? void 0 : model.syncChanges();
         if (!doc) {
