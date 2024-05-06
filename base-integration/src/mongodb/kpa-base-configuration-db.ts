@@ -6,13 +6,13 @@ export abstract class KPABaseConfigurationDB<T> {
     abstract collectionName: string;
 
     constructor() {
-        this.mongoDbUrl = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/?authMechanism=DEFAULT`;
+        this.mongoDbUrl = process.env.KPA_INTEGRATIONS_DB || 'no-database-found';
     }
 
     async getConfiguration(filter:any = {}) : Promise<T[]> {
         let result: T[] = []
         const mongoClient = await MongoClient.connect(this.mongoDbUrl);
-        const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`);
+        const mongoDb = mongoClient.db();
 
         let mongoDbCollection = mongoDb.collection(this.collectionName);
         const findResult = await mongoDbCollection.find(filter).toArray();
@@ -28,7 +28,7 @@ export abstract class KPABaseConfigurationDB<T> {
     async getConfigurationByKpaToken(kpaToken: String) : Promise<T | null> {
         let result: T[] = []
         const mongoClient = await MongoClient.connect(this.mongoDbUrl);
-        const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`);
+        const mongoDb = mongoClient.db();
 
         let mongoDbCollection = mongoDb.collection(this.collectionName);
         const findResult = await mongoDbCollection.find({kpa_token: kpaToken}).toArray();
@@ -47,7 +47,7 @@ export abstract class KPABaseConfigurationDB<T> {
 
     async save(model: KPABaseConfigurationModel) : Promise<KPABaseConfigurationModel> {
         const mongoClient = await MongoClient.connect(this.mongoDbUrl);
-        const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`)
+        const mongoDb = mongoClient.db();
         let mongoDbCollection = mongoDb.collection(this.collectionName);
 
         const doc = model?.syncChanges();
