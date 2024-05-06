@@ -43,6 +43,10 @@ export class ProcoreUserJob implements IJob {
 
                     let kpaUsers : KPAUserModel[] = [];
                     for(let user of users) {
+                        if (!user.is_employee) {
+                            continue;
+                        }
+
                         //Build KPA user Data and Check existing
                         var kpaUser : KPAUserModel | null = null;
                         for (let i = 0; i < kpaExistUsers.length; i++) {
