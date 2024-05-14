@@ -18,10 +18,10 @@ export class RivetUserJob implements IJob {
     resetPassword: boolean;
 
     constructor(config: any) {
-        this.name = 'Rivet User Job';
         this.config = config;
 
         this.kpaSite = config["kpaSite"]["stringValue"];
+        this.name = 'Rivet User Job - ' + this.kpaSite;
         this.kpaToken = config["kpaToken"]["stringValue"];
         this.clientId = config["clientId"]["stringValue"];
         this.token = config["token"]["stringValue"];

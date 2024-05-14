@@ -14,10 +14,10 @@ export class RivetProjectJob implements IJob {
     config: any;
 
     constructor(config: any) {
-        this.name = 'Rivet Project Job';
         this.config = config;
 
         this.kpaSite = config["kpaSite"]["stringValue"];
+        this.name = 'Rivet Project Job - ' + this.kpaSite;
         this.kpaToken = config["kpaToken"]["stringValue"];
         this.clientId = config["clientId"]["stringValue"];
         this.token = config["token"]["stringValue"];
