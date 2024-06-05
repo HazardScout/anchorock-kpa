@@ -15,10 +15,10 @@ export class SpectrumProjectJob implements IJob {
     config: any;
 
     constructor(config: any) {
-        this.name = 'Spectrum Project Job';
         this.config = config;
 
         this.kpaSite = config["kpaSite"]["stringValue"];
+        this.name = 'Spectrum Project Job - ' + this.kpaSite;
         this.kpaToken = config["kpaToken"]["stringValue"];
         this.serverUrl = config["serverUrl"]["stringValue"];
         this.companyCodes = JSON.parse(config["companyCodes"]["stringValue"]);

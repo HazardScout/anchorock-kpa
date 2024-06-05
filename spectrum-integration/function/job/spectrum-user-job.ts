@@ -18,10 +18,10 @@ export class SpectrumUserJob implements IJob {
     resetPassword: boolean;
 
     constructor(config: any) {
-        this.name = 'Spectrum User Job';
         this.config = config;
 
         this.kpaSite = config["kpaSite"]["stringValue"];
+        this.name = 'Spectrum User Job - ' + this.kpaSite;
         this.kpaToken = config["kpaToken"]["stringValue"];
         this.serverUrl = config["serverUrl"]["stringValue"];
         this.companyCodes = JSON.parse(config["companyCodes"]["stringValue"]);
