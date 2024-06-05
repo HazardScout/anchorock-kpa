@@ -39,7 +39,7 @@ export class KPAProjectAPI {
             var isDuplicate = false;
             for (let i = 0; i < cleanRecords.length; i++) {
                 var clearRecord : KPAProjectModel = cleanRecords[i];
-                if (clearRecord.code === model.code) {
+                if (clearRecord.code.trim() === model.code.trim()) {
                     isDuplicate = true;
                     invalidRecords.push(model)
                     invalidRecords.push(clearRecord)
@@ -50,7 +50,7 @@ export class KPAProjectAPI {
 
             if (!isDuplicate) {
                 for (var invalidRecord of invalidRecords) {
-                    if (invalidRecord.code === model.code) {
+                    if (invalidRecord.code !== null && invalidRecord.code.trim() === model.code.trim()) {
                         isDuplicate = true;
                         invalidRecords.push(model)
                         break;
