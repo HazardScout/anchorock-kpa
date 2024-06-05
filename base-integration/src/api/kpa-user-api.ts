@@ -83,8 +83,8 @@ export class KPAUserAPI {
 
         var jobTitles = [];
         for(var model of models) {
-            if (model.title != null && model.title !== '' && jobTitles.indexOf(model.title) == -1) {
-                jobTitles.push(model.title);
+            if (model.title != null && model.title !== '' && jobTitles.indexOf(model.title.trim()) == -1) {
+                jobTitles.push(model.title.trim());
             }
         }
 
