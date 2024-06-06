@@ -16,7 +16,7 @@ export class KPAProcoreConfigurationDB extends KPABaseConfigurationDB<KPAProcore
 
     async updateProcoreToken(data: KPAProcoreConfigurationModel) : Promise<KPAProcoreConfigurationModel> {
         const mongoClient = await MongoClient.connect(this.mongoDbUrl);
-        const mongoDb = mongoClient.db(`${process.env.MONGODB_DBNAME}`)
+        const mongoDb = mongoClient.db();
         let mongoDbCollection = mongoDb.collection(this.collectionName);
 
         await mongoDbCollection.updateOne({kpa_token: data.kpaToken}, {$set: {
