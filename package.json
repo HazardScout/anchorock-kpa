@@ -16,7 +16,7 @@
     "aws-xray-sdk-core": "3.5.3",
     "axios": "1.6.5",
     "dotenv": "16.3.1",
-    "fast-xml-parser": "4.3.6",
+    "fast-xml-parser": "4.4.1",
     "glob": "7.1.6",
     "jest": "29.6.2",
     "mime": "1.6.0",
