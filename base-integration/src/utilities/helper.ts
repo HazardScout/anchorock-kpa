@@ -6,10 +6,8 @@ export class Helper {
 
     let finalData = data.trim();
 
-    finalData = finalData.replace('\r\n', ' ')
-    finalData = finalData.replace('\r', ' ')
-    finalData = finalData.replace('\n', ' ')
-
+    const regex = /\/r|\/n/g
+    finalData = finalData.replace(regex, ' ')
     if (
       finalData.indexOf(',') < 0
       && finalData.indexOf('"') < 0
