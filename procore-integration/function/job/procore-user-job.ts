@@ -43,6 +43,7 @@ export class ProcoreUserJob implements IJob {
 
                     let kpaUsers : KPAUserModel[] = [];
                     for(let user of users) {
+                        let isExistingKpaUser = false;
                         if (!user.is_employee) {
                             continue;
                         }
@@ -56,6 +57,7 @@ export class ProcoreUserJob implements IJob {
                             if (kpaExistUser.employeeNumber === user.employee_id) {
                                 kpaUser = kpaExistUser;
                                 kpaExistUsers.splice(i,1);
+                                isExistingKpaUser = true;
                                 break;
                             }
                         }
@@ -87,7 +89,7 @@ export class ProcoreUserJob implements IJob {
                         kpaUser.email = user.email_address;
                         kpaUser.username = user.email_address;
                         kpaUser.initialPassword = `KPAFlex2024!!`;
-                        kpaUser.role = this.config.defaultRole;
+                        kpaUser.role = isExistingKpaUser ? '' : this.config.defaultRole;
                         kpaUser.title = user.job_title;
                         kpaUser.welcomeEmail = this.config.isWelcomeEmail
                         kpaUser.resetPassword = this.config.isForceResetPassword
