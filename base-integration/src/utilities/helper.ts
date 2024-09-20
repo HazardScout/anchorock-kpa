@@ -6,6 +6,8 @@ export class Helper {
 
     let finalData = data.trim();
 
+    const regex = /\/r|\/n/g
+    finalData = finalData.replace(regex, ' ')
     if (
       finalData.indexOf(',') < 0
       && finalData.indexOf('"') < 0
