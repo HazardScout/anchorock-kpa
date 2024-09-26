@@ -9,7 +9,7 @@ export class KPAUserAPI {
 
     constructor(token: string) {
         this.token = token;
-        this.apiInstance = axios.create({baseURL: `https://api.${process.env.SITE_DOMAIN}.com/v1`})
+        this.apiInstance = axios.create({baseURL: `https://api.${process.env.SITE_DOMAIN}/v1`})
     }
 
     async getAllUser():Promise<KPAUserModel[]> {
