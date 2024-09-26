@@ -9,7 +9,7 @@ export class KPAProjectAPI {
 
     constructor(token: string) {
         this.token = token;
-        this.apiInstance = axios.create({baseURL: 'https://api.kpaehs.com/v1'})
+        this.apiInstance = axios.create({baseURL: `https://api.${process.env.SITE_DOMAIN}.com/v1`})
     }
 
     async getAllProject():Promise<KPAProjectModel[]> {
