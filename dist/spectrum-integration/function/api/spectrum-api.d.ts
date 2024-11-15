@@ -8,5 +8,5 @@ export declare class SpectrumAPI {
     private xmlBuilder;
     constructor(serverUrl: string, authorizationId: string, companyCode: string);
     getProjects(): Promise<SpectrumProjectModel[]>;
-    getUsers(): Promise<SpectrumUserModel[]>;
+    getUsers(statusType?: string): Promise<SpectrumUserModel[]>;
 }
