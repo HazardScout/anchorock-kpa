@@ -44,8 +44,14 @@ export class SpectrumUserJob implements IJob {
         for (var companyCode of this.companyCodes) {
             //Fetch Spectrum Users
             let spectrumAPI = new SpectrumAPI(this.serverUrl, this.authorizationId, companyCode);
-            //Get Active Users
+            // Get Active Users
             let users = await spectrumAPI.getUsers('A');
+            // Get Inactive Users
+            let inactiveUsers = await spectrumAPI.getUsers('I');
+
+            // Append all users
+            users = users.concat(inactiveUsers);
+
             status.totalSourceRecord = users.length
 
             //Loop Spectrum Users
@@ -64,10 +70,18 @@ export class SpectrumUserJob implements IJob {
                 //Build KPA user Data and Check existing
                 if (kpaUser == null) {
                     kpaUser = new KPAUserModel();
+                    if (user.employeeStatus !== 'A') {
+                        status.skippedRecord++
+                        continue;
+                    }
                 } else {
                     if (!this.isEditUser) {
                         status.skippedRecord++
                         continue;
+                    }
+
+                    if (user.employeeStatus !== 'A') {
+                        status.inactivatedRecord++
                     }
                 }
 
@@ -82,31 +96,16 @@ export class SpectrumUserJob implements IJob {
                 kpaUser.title = user.title
                 kpaUser.welcomeEmail = this.welcomeEmail
                 kpaUser.resetPassword = this.resetPassword
-                kpaUser.terminationDate == null
+
+                if (user.employeeStatus !== 'A' && kpaUser.terminationDate == null) {
+                    kpaUser.terminationDate = new Date().toDateString();
+                    debuglog('log:spectrum:user')(`Need to Check ${kpaUser.terminationDate}`)
+                }
 
                 //Add User To List
                 kpaUsers.push(kpaUser);
                 status.upsertRecord++;
-
             }
-            
-            // Update remaining kpaUsers as not active for this company code
-            if (this.isEditUser && companyCode.trim()) {
-                // Remaining existing users
-                for (let i = 0; i < kpaExistUsers.length; i++) {
-                    const kpaExistUser = kpaExistUsers[i];
-                    // Check for employeeNumber starts with companyCode-
-                    if(kpaExistUser.employeeNumber.startsWith(`${companyCode.trim()}-`) && kpaExistUser.terminationDate == null) {
-                        kpaExistUser.terminationDate = new Date().toDateString();
-                        debuglog('log:spectrum:user')(`Existing user need to Check ${kpaExistUser.terminationDate}`)
-                        //Update User To List
-                        kpaUsers.push(kpaExistUser);
-                        status.upsertRecord++;
-                        status.inactivatedRecord++;            
-                    }
-                }
-            }
- 
         }
 
         //Send Data
