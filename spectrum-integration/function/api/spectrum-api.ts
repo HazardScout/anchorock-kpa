@@ -87,7 +87,7 @@ export class SpectrumAPI {
         return result;
     } 
 
-    async getUsers() : Promise<SpectrumUserModel[]> {
+    async getUsers(statusType: string = '') : Promise<SpectrumUserModel[]> {
 
         const requestJson = {
             '?xml': {
@@ -105,7 +105,7 @@ export class SpectrumAPI {
                         'pUnion_Code': '',
                         'pOccupation': '',
                         'pTrade': '',
-                        'pStatus_Type': '',
+                        'pStatus_Type': statusType,
                         'pCost_Center': '',
                         'pSort_By': '',
                         '@_xmlns': 'http://www.northgate-is.com/proiv/webservices/types'

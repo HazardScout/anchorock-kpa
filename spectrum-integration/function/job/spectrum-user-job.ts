@@ -44,7 +44,14 @@ export class SpectrumUserJob implements IJob {
         for (var companyCode of this.companyCodes) {
             //Fetch Spectrum Users
             let spectrumAPI = new SpectrumAPI(this.serverUrl, this.authorizationId, companyCode);
-            let users = await spectrumAPI.getUsers();
+            // Get Active Users
+            let users = await spectrumAPI.getUsers('A');
+            // Get Inactive Users
+            let inactiveUsers = await spectrumAPI.getUsers('I');
+
+            // Append all users
+            users = users.concat(inactiveUsers);
+
             status.totalSourceRecord = users.length
 
             //Loop Spectrum Users
