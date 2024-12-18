@@ -4,7 +4,7 @@ export class Helper {
       return '';
     }
 
-    let finalData = data.trim();
+    let finalData = String(data).trim();
 
     // Must check for both text characters ('\\r\\n') and actual unicode ('\r\n')
     const regex = /\\r\\n|\r\n|\\r|\\n|\r|\n/g
