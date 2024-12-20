@@ -26,8 +26,8 @@ export class Helper {
       typeof incomingDate === 'number' &&
       incomingDate.toString().length >= 10
     ) {
-      const date = new Date(incomingDate);
-      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+      // return in format mm/dd/yyyy
+      return new Date(incomingDate).toLocaleDateString('en-US');
     }
     // Return the original value if not epoch time
     return incomingDate as string;
