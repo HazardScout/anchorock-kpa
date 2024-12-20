@@ -108,7 +108,7 @@ export class KPAUserAPI {
             dataUser = `${dataUser},${Helper.csvContentChecker(model.role)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.title)}`
             dataUser = `${dataUser},${Helper.csvContentChecker(model.email)}`
-            dataUser = `${dataUser},${Helper.csvContentChecker(model.terminationDate ?? '')}`
+            dataUser = `${dataUser},${Helper.csvContentChecker(Helper.formatDatesIfEpoch(model.terminationDate ?? ''))}`
             dataUser = `${dataUser},${model.resetPassword ? 'Y': 'N'}`
             dataUser = `${dataUser},${model.welcomeEmail ? 'Y': 'N'}`
 
