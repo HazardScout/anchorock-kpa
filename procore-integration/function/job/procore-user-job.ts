@@ -95,7 +95,7 @@ export class ProcoreUserJob implements IJob {
                         kpaUser.resetPassword = this.config.isForceResetPassword
 
                         if (!user.is_active && kpaUser.terminationDate == null) {
-                            kpaUser.terminationDate = new Date().toDateString();
+                            kpaUser.terminationDate = new Date().toLocaleDateString('en-US');
                         }
 
                         kpaUsers.push(kpaUser);
