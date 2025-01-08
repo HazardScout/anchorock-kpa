@@ -35,6 +35,10 @@ export class KPAProjectAPI {
                 invalidRecords.push(model)
                 continue
             }
+            if (model.name === null || model.name === '') {
+                invalidRecords.push(model)
+                continue
+            }
 
             var isDuplicate = false;
             for (let i = 0; i < cleanRecords.length; i++) {
