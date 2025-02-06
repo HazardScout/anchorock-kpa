@@ -48,14 +48,16 @@ export class SpectrumUserJob implements IJob {
             status.totalSourceRecord = users.length
 
             //Loop Spectrum Users
-            for(let user of users) {
+            for (let user of users) {
+                let isExistingKpaUser = false;
                 var kpaUser : KPAUserModel | null = null;
                 for (let i = 0; i < kpaExistUsers.length; i++) {
                     const kpaExistUser = kpaExistUsers[i];
                     const employeeCode = `${companyCode.trim()}-${user.employeeCode.trim()}`;
                     if (kpaExistUser.employeeNumber === employeeCode) {
                         kpaUser = kpaExistUser;
-                        kpaExistUsers.splice(i,1);
+                        kpaExistUsers.splice(i, 1);
+                        isExistingKpaUser = true
                         break;
                     }
                 }
@@ -85,7 +87,7 @@ export class SpectrumUserJob implements IJob {
                 kpaUser.username = `${companyCode.trim()}-${user.employeeCode.trim()}`;
                 kpaUser.email = '';
                 kpaUser.initialPassword = `KPAFlex2024!!`;
-                kpaUser.role = this.defaultRole;
+                kpaUser.role = isExistingKpaUser ? '' : this.defaultRole;
                 kpaUser.title = user.title
                 kpaUser.welcomeEmail = this.welcomeEmail
                 kpaUser.resetPassword = this.resetPassword
