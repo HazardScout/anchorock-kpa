@@ -27,8 +27,8 @@ export class RivetProjectJob implements IJob {
     async execute(status:JobStatus): Promise<void> {
         debuglog('log:rivet:project')("Execute RivetProjectJob Start");
         let kpaProjectAPI = new KPAProjectAPI(this.kpaToken);
-        // let kpaExistProjects = await kpaProjectAPI.getAllProject();
-        let kpaExistProjects : KPAProjectModel[] = [];
+        let kpaExistProjects = await kpaProjectAPI.getAllProject();
+        //let kpaExistProjects : KPAProjectModel[] = [];
         status.totalExistingRecord = kpaExistProjects.length
         debuglog('log:rivet:project')(JSON.stringify(kpaExistProjects, null, 2));
 
@@ -54,9 +54,16 @@ export class RivetProjectJob implements IJob {
             }
 
             if (kpaProject == null) {
+                if(project.jobStatus !== 'In-Progress') {
+                    status.skippedRecord++;
+                    continue;
+                }
                 kpaProject = new KPAProjectModel();
             } else {
-                if (!this.isEditProject) {
+                if(project.jobStatus !== 'In-Progress') {
+                    // Updating existing project as inactive
+                }
+                else if (!this.isEditProject) {
                     status.skippedRecord++
                     continue;
                 }

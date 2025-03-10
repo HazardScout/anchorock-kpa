@@ -30,8 +30,8 @@ export class SpectrumProjectJob implements IJob {
         debuglog('log:spectrum:project')("Execute SpectrumProjectJob Start");
         //Fetch KPA Projects
         let kpaProjectAPI = new KPAProjectAPI(this.kpaToken);
-        // let kpaExistProjects = await kpaProjectAPI.getAllProject();
-        let kpaExistProjects : KPAProjectModel[] = [];
+        let kpaExistProjects = await kpaProjectAPI.getAllProject();
+        //let kpaExistProjects : KPAProjectModel[] = [];
         status.totalExistingRecord = kpaExistProjects.length
 
 
@@ -56,9 +56,17 @@ export class SpectrumProjectJob implements IJob {
                 }
 
                 if (kpaProject == null) {
+                    // Ignore adding inactive  projects 
+                    if(project.statusCode !== "A") {
+                        status.skippedRecord++
+                        continue;
+                    }
                     kpaProject = new KPAProjectModel();
                 } else {
-                    if (!this.isEditProject) {
+                    if(project.statusCode !== "A") {
+                        // update existing project as inactive
+                    }
+                    else if (!this.isEditProject) {
                         status.skippedRecord++
                         continue;
                     }

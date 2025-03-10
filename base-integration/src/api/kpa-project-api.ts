@@ -16,9 +16,11 @@ export class KPAProjectAPI {
         let result : KPAProjectModel[] = [];
         const { data } = await this.apiInstance.post('projects.list', {token:this.token});
         debuglog('log:base:projects')(data)
-        for (var projectData of data) {
-            let project = Object.assign(new KPAProjectModel(), projectData);
-            result.push(project);
+        if (data && data instanceof Array) {
+            for (var projectData of data) {
+                let project = Object.assign(new KPAProjectModel(), projectData);
+                result.push(project);
+            }
         }
         return result;
     }
