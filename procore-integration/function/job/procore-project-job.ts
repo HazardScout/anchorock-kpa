@@ -44,7 +44,7 @@ export class ProcoreProjectJob implements IJob  {
                         var kpaProject : KPAProjectModel | null = null;
                         for (let i = 0; i < kpaExistProjects.length; i++) {
                             const kpaExistProject = kpaExistProjects[i];
-                            if (kpaExistProject.code === project.project_number) {
+                            if (kpaExistProject.number && kpaExistProject.number === project.project_number) {
                                 kpaProject = kpaExistProject;
                                 kpaExistProjects.splice(i,1);
                                 break;

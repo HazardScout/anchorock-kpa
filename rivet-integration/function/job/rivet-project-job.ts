@@ -46,7 +46,7 @@ export class RivetProjectJob implements IJob {
             var kpaProject : KPAProjectModel | null = null;
             for (let i = 0; i < kpaExistProjects.length; i++) {
                 const kpaExistProject = kpaExistProjects[i];
-                if (kpaExistProject.name === project.jobName && kpaExistProject.code === project.jobNumber) {
+                if (kpaExistProject.number && kpaExistProject.name === project.jobName && kpaExistProject.number === project.jobNumber) {
                     kpaProject = kpaExistProject;
                     kpaExistProjects.splice(i,1);
                     break;
