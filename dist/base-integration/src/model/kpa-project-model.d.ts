@@ -7,5 +7,7 @@ export declare class KPAProjectModel {
     city: string;
     state: string;
     zip: string;
+    number: string;
+    active: Boolean;
     constructor();
 }
