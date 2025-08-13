@@ -18,8 +18,8 @@ export class ProcoreProjectJob implements IJob  {
     async execute(status: JobStatus): Promise<void> {
         //Fetch KPA Projects
         let kpaProjectAPI = new KPAProjectAPI(this.config.kpaToken);
-        // let kpaExistProjects = await kpaProjectAPI.getAllProject();
-        let kpaExistProjects : KPAProjectModel[] = [];
+        let kpaExistProjects = await kpaProjectAPI.getAllProject();
+        // let kpaExistProjects : KPAProjectModel[] = [];
         status.totalExistingRecord = kpaExistProjects.length
 
         let auth = new procoreContext(this.config.procoreToken, this.config.procoreRefreshToken);
@@ -44,7 +44,7 @@ export class ProcoreProjectJob implements IJob  {
                         var kpaProject : KPAProjectModel | null = null;
                         for (let i = 0; i < kpaExistProjects.length; i++) {
                             const kpaExistProject = kpaExistProjects[i];
-                            if (kpaExistProject.code === project.project_number) {
+                            if (kpaExistProject.number && kpaExistProject.number === project.project_number) {
                                 kpaProject = kpaExistProject;
                                 kpaExistProjects.splice(i,1);
                                 break;
@@ -52,9 +52,16 @@ export class ProcoreProjectJob implements IJob  {
                         }
 
                         if (kpaProject == null) {
+                            if (!project.active) {
+                                status.skippedRecord++;
+                                continue;
+                            }
                             kpaProject = new KPAProjectModel();
                         } else {
-                            if (!this.config.isEditProject) {
+                            if (!project.active) {
+                                // update existing project as inactive
+                            }
+                            else if (!this.config.isEditProject) {
                                 // console.log(`Skip Project because of Cannot Allow to edit ${project.jobName}`)
                                 status.skippedRecord++
                                 continue;
