@@ -76,6 +76,7 @@ export class SpectrumProjectJob implements IJob {
                 kpaProject.name = project.jobDescription;
                 kpaProject.code = project.jobNumber;
                 kpaProject.isActive = project.statusCode === "A"
+                kpaProject.active = project.statusCode === "A"
                 kpaProject.address = project.address;
                 kpaProject.city = project.city;
                 kpaProject.state = project.state;

@@ -51,26 +51,20 @@ export class ProcoreProjectJob implements IJob  {
                             }
                         }
 
+                        // Check if its new project
                         if (kpaProject == null) {
+                            // if its inactive, then ignore
                             if (!project.active) {
                                 status.skippedRecord++;
                                 continue;
                             }
                             kpaProject = new KPAProjectModel();
-                        } else {
-                            if (!project.active) {
-                                // update existing project as inactive
-                            }
-                            else if (!this.config.isEditProject) {
-                                // console.log(`Skip Project because of Cannot Allow to edit ${project.jobName}`)
-                                status.skippedRecord++
-                                continue;
-                            }
                         }
 
                         kpaProject.name = project.name;
                         kpaProject.code = project.project_number;
-                        kpaProject.isActive = project.active
+                        kpaProject.isActive = project.active;
+                        kpaProject.active = project.active;
                         kpaProject.address = project.address;
                         kpaProject.city = project.city;
                         kpaProject.state = project.state_code;
