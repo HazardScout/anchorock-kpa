@@ -14,12 +14,21 @@ export class KPAProjectAPI {
 
     async getAllProject():Promise<KPAProjectModel[]> {
         let result : KPAProjectModel[] = [];
-        const { data } = await this.apiInstance.post('projects.list', {token:this.token});
-        debuglog('log:base:projects')(data)
-        for (var projectData of data) {
+        let page = 1; // first page
+        let totalPages = 1; // total pages
+        const maxLimit = 500; // max limit
+
+        do {
+          const { data } = await this.apiInstance.post('projects.list', {'token':this.token, 'limit': maxLimit, 'page': page});
+          debuglog('log:base:projects')(data)
+          page++;
+          totalPages = data?.paging?.last_page || totalPages;
+          for (var projectData of data?.projects) {
             let project = Object.assign(new KPAProjectModel(), projectData);
             result.push(project);
-        }
+          }
+        } while(page <= totalPages);
+
         return result;
     }
 

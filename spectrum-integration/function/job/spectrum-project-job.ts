@@ -30,8 +30,8 @@ export class SpectrumProjectJob implements IJob {
         debuglog('log:spectrum:project')("Execute SpectrumProjectJob Start");
         //Fetch KPA Projects
         let kpaProjectAPI = new KPAProjectAPI(this.kpaToken);
-        // let kpaExistProjects = await kpaProjectAPI.getAllProject();
-        let kpaExistProjects : KPAProjectModel[] = [];
+        let kpaExistProjects = await kpaProjectAPI.getAllProject();
+        //let kpaExistProjects : KPAProjectModel[] = [];
         status.totalExistingRecord = kpaExistProjects.length
 
 
@@ -48,7 +48,7 @@ export class SpectrumProjectJob implements IJob {
                 var kpaProject : KPAProjectModel | null = null;
                 for (let i = 0; i < kpaExistProjects.length; i++) {
                     const kpaExistProject = kpaExistProjects[i];
-                    if (kpaExistProject.code === project.jobNumber) {
+                    if (kpaExistProject.number && kpaExistProject.number === project.jobNumber) {
                         kpaProject = kpaExistProject;
                         kpaExistProjects.splice(i,1);
                         break;
@@ -56,9 +56,17 @@ export class SpectrumProjectJob implements IJob {
                 }
 
                 if (kpaProject == null) {
+                    // Ignore adding inactive  projects 
+                    if(project.statusCode !== "A") {
+                        status.skippedRecord++
+                        continue;
+                    }
                     kpaProject = new KPAProjectModel();
                 } else {
-                    if (!this.isEditProject) {
+                    if(project.statusCode !== "A") {
+                        // update existing project as inactive
+                    }
+                    else if (!this.isEditProject) {
                         status.skippedRecord++
                         continue;
                     }
@@ -68,6 +76,7 @@ export class SpectrumProjectJob implements IJob {
                 kpaProject.name = project.jobDescription;
                 kpaProject.code = project.jobNumber;
                 kpaProject.isActive = project.statusCode === "A"
+                kpaProject.active = project.statusCode === "A"
                 kpaProject.address = project.address;
                 kpaProject.city = project.city;
                 kpaProject.state = project.state;

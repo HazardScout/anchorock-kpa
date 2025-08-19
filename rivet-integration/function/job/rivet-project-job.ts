@@ -27,8 +27,8 @@ export class RivetProjectJob implements IJob {
     async execute(status:JobStatus): Promise<void> {
         debuglog('log:rivet:project')("Execute RivetProjectJob Start");
         let kpaProjectAPI = new KPAProjectAPI(this.kpaToken);
-        // let kpaExistProjects = await kpaProjectAPI.getAllProject();
-        let kpaExistProjects : KPAProjectModel[] = [];
+        let kpaExistProjects = await kpaProjectAPI.getAllProject();
+        //let kpaExistProjects : KPAProjectModel[] = [];
         status.totalExistingRecord = kpaExistProjects.length
         debuglog('log:rivet:project')(JSON.stringify(kpaExistProjects, null, 2));
 
@@ -46,7 +46,7 @@ export class RivetProjectJob implements IJob {
             var kpaProject : KPAProjectModel | null = null;
             for (let i = 0; i < kpaExistProjects.length; i++) {
                 const kpaExistProject = kpaExistProjects[i];
-                if (kpaExistProject.name === project.jobName && kpaExistProject.code === project.jobNumber) {
+                if (kpaExistProject.number && kpaExistProject.name === project.jobName && kpaExistProject.number === project.jobNumber) {
                     kpaProject = kpaExistProject;
                     kpaExistProjects.splice(i,1);
                     break;
@@ -54,9 +54,16 @@ export class RivetProjectJob implements IJob {
             }
 
             if (kpaProject == null) {
+                if(project.jobStatus !== 'In-Progress') {
+                    status.skippedRecord++;
+                    continue;
+                }
                 kpaProject = new KPAProjectModel();
             } else {
-                if (!this.isEditProject) {
+                if(project.jobStatus !== 'In-Progress') {
+                    // Updating existing project as inactive
+                }
+                else if (!this.isEditProject) {
                     status.skippedRecord++
                     continue;
                 }
@@ -70,6 +77,7 @@ export class RivetProjectJob implements IJob {
             kpaProject.name = project.jobName;
             kpaProject.code = project.jobNumber;
             kpaProject.isActive = project.jobStatus === 'In-Progress'
+            kpaProject.active = project.jobStatus === 'In-Progress'
             kpaProject.address = project.address;
             kpaProject.city = project.city;
             kpaProject.state = project.state;
